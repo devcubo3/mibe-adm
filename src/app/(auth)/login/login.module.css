@@ -1,0 +1,66 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 450px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 48px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.formHeader {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.logo {
+  margin-bottom: 16px;
+}
+
+.formTitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #181818;
+  margin-bottom: 8px;
+}
+
+.formSubtitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #666666;
+  line-height: 24px;
+}
+
+.form {
+  margin-bottom: 24px;
+}
+
+.footer {
+  text-align: center;
+}
+
+.footer p {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #666666;
+}
+
+.link {
+  color: #181818;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.link:hover {
+  opacity: 0.8;
+}

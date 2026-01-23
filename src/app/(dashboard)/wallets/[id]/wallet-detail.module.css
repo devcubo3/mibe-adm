@@ -1,0 +1,348 @@
+.detailPage {
+    padding: 0;
+}
+
+/* Back Button */
+.backButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    padding: 0;
+    margin-bottom: 24px;
+    transition: color 0.2s;
+}
+
+.backButton:hover {
+    color: var(--color-primary);
+}
+
+/* Balance Card */
+.balanceCard {
+    background: linear-gradient(135deg, #181818 0%, #2d2d2d 100%);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.balanceContent {
+    flex: 1;
+}
+
+.balanceLabel {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.balanceAmount {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 48px;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.balanceSubtext {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.expiryBadgeLarge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 12px 20px;
+    border-radius: 8px;
+}
+
+.expiryBadgeLarge.expiringSoon {
+    background-color: rgba(255, 59, 48, 0.2);
+}
+
+.expiryText {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #fff;
+}
+
+/* Info Grid */
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+/* Info Cards */
+.infoCard {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.infoCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.infoCardIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background-color: var(--color-input-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.infoCardLogo {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.infoCardTitle {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.infoCardSubtitle {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin: 4px 0 0 0;
+}
+
+.infoCardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.infoLabel {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+.infoValue {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-primary);
+}
+
+.infoBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--color-input-bg);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+/* Section */
+.section {
+    margin-bottom: 32px;
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.sectionTitle {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--color-primary);
+    margin: 0;
+}
+
+/* Transactions Table */
+.transactionsTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.transactionsTable th {
+    text-align: left;
+    padding: 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: var(--color-input-bg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.transactionsTable td {
+    padding: 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.transactionsTable tr:last-child td {
+    border-bottom: none;
+}
+
+.transactionsTable tr:hover td {
+    background-color: var(--color-input-bg);
+}
+
+.amountCredit {
+    color: #34C759;
+    font-weight: 600;
+}
+
+.amountDebit {
+    color: #FF3B30;
+    font-weight: 600;
+}
+
+.typeBadge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.typeBadgeCredit {
+    background-color: rgba(52, 199, 89, 0.1);
+    color: #34C759;
+}
+
+.typeBadgeDebit {
+    background-color: rgba(255, 59, 48, 0.1);
+    color: #FF3B30;
+}
+
+/* Empty State */
+.emptyState {
+    text-align: center;
+    padding: 48px 24px;
+    background-color: var(--color-input-bg);
+    border-radius: 12px;
+}
+
+.emptyStateText {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* Loading State */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+/* Error State */
+.errorState {
+    text-align: center;
+    padding: 48px 24px;
+    background-color: rgba(255, 59, 48, 0.1);
+    border-radius: 12px;
+}
+
+.errorText {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #FF3B30;
+    margin: 0 0 16px 0;
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .balanceCard {
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
+    }
+
+    .balanceAmount {
+        font-size: 36px;
+    }
+
+    .infoGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .transactionsTable {
+        font-size: 12px;
+    }
+
+    .transactionsTable th,
+    .transactionsTable td {
+        padding: 12px 8px;
+    }
+}

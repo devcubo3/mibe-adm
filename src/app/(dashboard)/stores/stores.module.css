@@ -1,0 +1,19 @@
+.filters {
+  margin-bottom: 24px;
+}
+
+.storeList {
+  display: flex;
+  flex-direction: column;
+}
+
+.loading,
+.emptyState {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #999999;
+  text-align: center;
+  padding: 48px 16px;
+  margin: 0;
+}

@@ -1,0 +1,37 @@
+.badge {
+  display: inline-block;
+  background-color: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.badgeText {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: #666666;
+}
+
+.badgePrimary {
+  background-color: #181818;
+}
+
+.badgePrimary .badgeText {
+  color: #ffffff;
+}
+
+.badgeSuccess {
+  background-color: rgba(52, 199, 89, 0.1);
+}
+
+.badgeSuccess .badgeText {
+  color: #34C759;
+}
+
+.badgeError {
+  background-color: rgba(255, 59, 48, 0.1);
+}
+
+.badgeError .badgeText {
+  color: #FF3B30;
+}

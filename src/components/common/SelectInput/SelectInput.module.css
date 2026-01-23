@@ -1,0 +1,59 @@
+.selectContainer {
+    margin-bottom: 16px;
+}
+
+.selectLabel {
+    display: block;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.selectField {
+    width: 100%;
+    height: 56px;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 0 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #181818;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+.selectField.placeholder {
+    color: #999999;
+}
+
+.selectField:focus {
+    border-color: #181818;
+    outline: none;
+}
+
+.selectField.error {
+    border-color: #ff3b30;
+}
+
+.selectField:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.selectErrorText {
+    display: block;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #ff3b30;
+    margin-top: 4px;
+}

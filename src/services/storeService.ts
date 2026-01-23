@@ -1,0 +1,172 @@
+import { Store, CreateStoreDTO, UpdateStoreDTO, Review } from '@/types';
+import { DbCompanyWithRelations, DbReviewWithRelations } from '@/types/database.types';
+import { supabase } from '@/lib/supabase';
+import { mapDbCompanyToStore, mapDbReviewToReview } from '@/lib/mappers';
+
+export const storeService = {
+  getAll: async (): Promise<Store[]> => {
+    const { data, error } = await supabase
+      .from('companies')
+      .select(`
+        *,
+        category:categories(*),
+        owner:profiles(*)
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching stores:', error);
+      throw new Error('Erro ao carregar estabelecimentos');
+    }
+
+    return (data as DbCompanyWithRelations[]).map(mapDbCompanyToStore);
+  },
+
+  getById: async (id: string): Promise<Store> => {
+    const { data, error } = await supabase
+      .from('companies')
+      .select(`
+        *,
+        category:categories(*),
+        owner:profiles(*)
+      `)
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching store:', error);
+      throw new Error('Estabelecimento não encontrado');
+    }
+
+    return mapDbCompanyToStore(data as DbCompanyWithRelations);
+  },
+
+  create: async (data: CreateStoreDTO): Promise<Store> => {
+    // Find category_id by name if category is provided
+    let categoryId: number | null = null;
+    if (data.category) {
+      const { data: categoryData } = await supabase
+        .from('categories')
+        .select('id')
+        .ilike('name', data.category)
+        .single();
+
+      if (categoryData) {
+        categoryId = categoryData.id;
+      }
+    }
+
+    // Map frontend DTO to database columns
+    const { data: inserted, error } = await supabase
+      .from('companies')
+      .insert({
+        business_name: data.name,
+        cnpj: data.cnpj?.trim() || null, // Send null instead of empty string
+        description: data.description,
+        logo_url: data.logo,
+        cover_url: data.coverImage,
+        cashback_percent: data.cashback.percentage,
+        min_purchase_value: data.rules.minPurchase,
+        expiration_days: data.rules.expirationDays,
+        has_expiration: data.rules.expirationDays > 0,
+        status: 'pending',
+        category_id: categoryId,
+        email: data.email,
+      })
+      .select(`
+        *,
+        category:categories(*),
+        owner:profiles(*)
+      `)
+      .single();
+
+    if (error) {
+      console.error('Error creating store:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
+      throw new Error(`Erro ao criar estabelecimento: ${error.message || error.code || 'Erro desconhecido'}`);
+    }
+
+    return mapDbCompanyToStore(inserted as DbCompanyWithRelations);
+  },
+
+  update: async (id: string, data: UpdateStoreDTO): Promise<Store> => {
+    // Map frontend DTO to database columns (only include defined fields)
+    const updateData: Record<string, unknown> = {};
+
+    if (data.name !== undefined) updateData.business_name = data.name;
+    if (data.cnpj !== undefined) updateData.cnpj = data.cnpj?.trim() || null;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.logo !== undefined) updateData.logo_url = data.logo;
+    if (data.coverImage !== undefined) updateData.cover_url = data.coverImage;
+    if (data.cashback?.percentage !== undefined) updateData.cashback_percent = data.cashback.percentage;
+    if (data.rules?.minPurchase !== undefined) updateData.min_purchase_value = data.rules.minPurchase;
+    if (data.rules?.expirationDays !== undefined) {
+      updateData.expiration_days = data.rules.expirationDays;
+      updateData.has_expiration = data.rules.expirationDays > 0;
+    }
+
+    // Find category_id by name if category is provided
+    if (data.category !== undefined) {
+      const { data: categoryData } = await supabase
+        .from('categories')
+        .select('id')
+        .ilike('name', data.category)
+        .single();
+
+      updateData.category_id = categoryData?.id || null;
+    }
+
+    // Map email if provided
+    if (data.email !== undefined) {
+      updateData.email = data.email;
+    }
+
+    const { data: updated, error } = await supabase
+      .from('companies')
+      .update(updateData)
+      .eq('id', id)
+      .select(`
+        *,
+        category:categories(*),
+        owner:profiles(*)
+      `)
+      .single();
+
+    if (error) {
+      console.error('Error updating store:', error);
+      throw new Error('Erro ao atualizar estabelecimento');
+    }
+
+    return mapDbCompanyToStore(updated as DbCompanyWithRelations);
+  },
+
+  delete: async (id: string): Promise<void> => {
+    const { error } = await supabase
+      .from('companies')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting store:', error);
+      throw new Error('Erro ao excluir estabelecimento');
+    }
+  },
+
+  getReviews: async (id: string): Promise<Review[]> => {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select(`
+        *,
+        user:profiles(*)
+      `)
+      .eq('company_id', id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching reviews:', error);
+      throw new Error('Erro ao carregar avaliações');
+    }
+
+    return (data as DbReviewWithRelations[]).map(mapDbReviewToReview);
+  },
+};

@@ -1,0 +1,130 @@
+.uploadContainer {
+    margin-bottom: 16px;
+}
+
+.uploadLabel {
+    display: block;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.uploadArea {
+    position: relative;
+    background-color: #f5f5f5;
+    border: 2px dashed #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.uploadArea:hover {
+    border-color: #181818;
+    background-color: #f0f0f0;
+}
+
+.uploadArea.error {
+    border-color: #ff3b30;
+}
+
+.uploadArea.profile {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
+
+.uploadArea.cover {
+    width: 100%;
+    height: 160px;
+    border-radius: 8px;
+}
+
+.placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #999999;
+}
+
+.placeholder span {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.uploadWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.uploadWrapper.profile {
+    width: 120px;
+    height: 120px;
+}
+
+.uploadWrapper.cover {
+    width: 100%;
+    height: 160px;
+}
+
+.editButton {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    background: #181818;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    transition: transform 0.2s, background-color 0.2s;
+    z-index: 10;
+}
+
+.uploadWrapper.profile .editButton {
+    bottom: 4px;
+    right: 4px;
+}
+
+.uploadWrapper.cover .editButton {
+    bottom: 8px;
+    right: 8px;
+}
+
+.editButton:hover {
+    transform: scale(1.1);
+    background-color: #333333;
+}
+
+.hiddenInput {
+    display: none;
+}
+
+.uploadErrorText {
+    display: block;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #ff3b30;
+    margin-top: 4px;
+}
