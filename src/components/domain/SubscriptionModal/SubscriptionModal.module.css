@@ -1,0 +1,139 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #181818;
+}
+
+.select {
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: #181818;
+    background: #ffffff;
+    cursor: pointer;
+    height: 56px;
+    appearance: auto;
+}
+
+.select:focus {
+    outline: none;
+    border-color: #181818;
+}
+
+.selectError {
+    border-color: #FF3B30;
+}
+
+.error {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    color: #FF3B30;
+}
+
+.hint {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    color: #8E8E93;
+}
+
+.currentPlan {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.currentPlanLabel {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: #8E8E93;
+}
+
+.currentPlanName {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #181818;
+}
+
+.planPreview {
+    padding: 16px;
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+}
+
+.previewTitle {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #181818;
+    margin: 0 0 4px 0;
+}
+
+.previewDescription {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    color: #8E8E93;
+    margin: 0 0 12px 0;
+}
+
+.previewDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.previewItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.previewLabel {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    color: #8E8E93;
+}
+
+.previewValue {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #181818;
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.loadingText {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: #8E8E93;
+    text-align: center;
+    padding: 24px 0;
+    margin: 0;
+}

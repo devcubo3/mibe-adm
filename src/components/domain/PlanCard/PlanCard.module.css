@@ -1,0 +1,134 @@
+.planCard {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.planCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.planCard.inactive {
+    opacity: 0.7;
+}
+
+.cardHeader {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.titleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.planName {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #181818;
+    margin: 0;
+}
+
+.description {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    color: #8E8E93;
+    margin: 8px 0 0;
+    line-height: 1.4;
+}
+
+.cardBody {
+    padding: 20px;
+    flex: 1;
+}
+
+.priceSection {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 20px;
+}
+
+.price {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: #181818;
+}
+
+.period {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: #8E8E93;
+}
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.featureItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: #666666;
+}
+
+.featureIcon {
+    color: #34C759;
+    flex-shrink: 0;
+}
+
+.featureItem strong {
+    color: #181818;
+    font-weight: 600;
+}
+
+.linkedInfo {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed #e0e0e0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    color: #8E8E93;
+}
+
+.cardFooter {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #fafafa;
+    border-top: 1px solid #f0f0f0;
+}
+
+.actionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #666666;
+    transition: all 0.2s ease;
+}
+
+.actionButton:hover {
+    background: #f5f5f5;
+    border-color: #181818;
+    color: #181818;
+}

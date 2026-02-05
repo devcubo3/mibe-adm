@@ -1,0 +1,47 @@
+.filters {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: #666666;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.checkboxLabel input {
+    width: 16px;
+    height: 16px;
+    accent-color: #181818;
+}
+
+.planGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .planGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.loading,
+.emptyState {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #999999;
+    text-align: center;
+    padding: 48px 16px;
+    margin: 0;
+}
