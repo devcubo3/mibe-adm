@@ -5,14 +5,11 @@ import { DashboardLayout, PageLayout } from '@/components/layout';
 import { Card } from '@/components/common';
 import {
     IoLockClosedOutline,
-    IoColorPaletteOutline,
-    IoBusinessOutline,
     IoHelpCircleOutline,
     IoChevronForward,
     IoLogOutOutline
 } from 'react-icons/io5';
-import { useAuthStore } from '@/store/authStore';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
 import styles from './settings.module.css';
 
@@ -25,14 +22,7 @@ interface SettingItem {
 }
 
 const SettingsPage = () => {
-    const router = useRouter();
-    const { user, logout } = useAuthStore();
-
-    const handleLogout = () => {
-        logout();
-        toast.success('Logout realizado com sucesso');
-        router.push('/login');
-    };
+    const { user, logout } = useAuth();
 
     const handleComingSoon = (feature: string) => {
         toast(`${feature} - Em breve!`, { icon: '🚧' });
@@ -47,21 +37,6 @@ const SettingsPage = () => {
         },
     ];
 
-    const appSettings: SettingItem[] = [
-        {
-            icon: <IoColorPaletteOutline size={24} />,
-            title: 'Aparência',
-            description: 'Tema claro, escuro ou automático',
-            onClick: () => handleComingSoon('Aparência'),
-            badge: 'Claro',
-        },
-        {
-            icon: <IoBusinessOutline size={24} />,
-            title: 'Empresa',
-            description: 'Configurações do estabelecimento',
-            onClick: () => handleComingSoon('Empresa'),
-        },
-    ];
 
     const supportSettings: SettingItem[] = [
         {
@@ -116,11 +91,6 @@ const SettingsPage = () => {
                         {renderSettingsList(accountSettings)}
                     </div>
 
-                    {/* App Settings */}
-                    <div className={styles.section}>
-                        <h3 className={styles.sectionTitle}>Aplicativo</h3>
-                        {renderSettingsList(appSettings)}
-                    </div>
 
                     {/* Support */}
                     <div className={styles.section}>
@@ -129,7 +99,7 @@ const SettingsPage = () => {
                     </div>
 
                     {/* Logout Button */}
-                    <button className={styles.logoutButton} onClick={handleLogout}>
+                    <button className={styles.logoutButton} onClick={logout}>
                         <IoLogOutOutline size={20} />
                         <span>Sair da conta</span>
                     </button>

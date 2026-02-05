@@ -15,7 +15,7 @@ import { SearchInput, Badge, Button, Pagination } from '@/components/common';
 import { storeService, transactionService, userService } from '@/services';
 import { Store, Transaction, User } from '@/types';
 import { useDebounce } from '@/hooks';
-import { formatCurrency, formatDate } from '@/utils';
+import { formatCurrency, formatDateTimeShort } from '@/utils';
 import toast from 'react-hot-toast';
 import styles from './store-transactions.module.css';
 
@@ -337,7 +337,7 @@ export default function StoreTransactionsPage() {
                                     return (
                                         <div key={transaction.id} className={styles.transactionItem}>
                                             <span className={styles.date}>
-                                                {formatDate(transaction.createdAt)}
+                                                {formatDateTimeShort(transaction.createdAt)}
                                             </span>
                                             <span className={styles.customer}>
                                                 {customer?.name || 'Cliente não encontrado'}

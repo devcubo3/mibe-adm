@@ -6,7 +6,6 @@ import { useForm } from '@/hooks';
 import { Button, Input } from '@/components/common';
 import { Logo } from '@/components/common/Logo';
 import { validators } from '@/utils';
-import Link from 'next/link';
 import styles from './login.module.css';
 
 export default function LoginPage() {
@@ -63,11 +62,6 @@ export default function LoginPage() {
           <Button title="Entrar" type="submit" loading={loading} />
         </form>
 
-        <div className={styles.footer}>
-          <p>
-            Não tem uma conta? <Link href="/register" className={styles.link}>Cadastre-se</Link>
-          </p>
-        </div>
       </div>
     </div>
   );

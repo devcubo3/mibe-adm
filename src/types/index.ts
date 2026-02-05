@@ -5,3 +5,5 @@ export * from './transaction.types';
 export * from './review.types';
 export * from './database.types';
 export * from './companyUser.types';
+export * from './plan.types';
+export * from './subscription.types';

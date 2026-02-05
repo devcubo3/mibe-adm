@@ -46,7 +46,6 @@ export interface CreateStoreDTO {
   address: string;
   contact: string;
   email: string;
-  password: string;
   coordinates: {
     latitude: number;
     longitude: number;

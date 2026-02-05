@@ -1,25 +1,30 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createClient } from '@/lib/supabase/middleware';
 
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')?.value;
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Public routes
-  const publicRoutes = ['/login', '/register'];
+  const publicRoutes = ['/login'];
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
 
-  // If trying to access protected route without token, redirect to login
-  if (!token && !isPublicRoute) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  const { supabase, supabaseResponse } = createClient(request);
+
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if ((!user || error) && !isPublicRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/login';
+    return NextResponse.redirect(url);
   }
 
-  // If trying to access auth routes with token, redirect to home
-  if (token && isPublicRoute) {
-    return NextResponse.redirect(new URL('/', request.url));
+  if (user && !error && isPublicRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/';
+    return NextResponse.redirect(url);
   }
 
-  return NextResponse.next();
+  return supabaseResponse;
 }
 
 export const config = {

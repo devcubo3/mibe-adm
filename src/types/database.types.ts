@@ -9,6 +9,7 @@
 
 export type CompanyStatus = 'pending' | 'active' | 'inactive';
 export type UserRole = 'client' | 'company_owner' | 'super_admin';
+export type PaymentHistoryStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 
 // ============================================
 // TABLES
@@ -33,10 +34,13 @@ export interface DbCategory {
 export interface DbPlan {
     id: string;
     name: string;
+    description: string | null;
     monthly_price: number;
     user_limit: number;
     excess_user_fee: number;
+    is_active: boolean;
     created_at: string;
+    updated_at: string;
 }
 
 export interface DbCompany {
@@ -54,6 +58,9 @@ export interface DbCompany {
     min_purchase_value: number;
     has_expiration: boolean;
     expiration_days: number;
+    address: string | null;
+    phone: string | null;
+    email: string | null;
     created_at: string;
 }
 
@@ -93,6 +100,32 @@ export interface DbCashbackBalance {
     last_purchase_date: string;
 }
 
+export interface DbSubscription {
+    id: string;
+    company_id: string;
+    plan_id: string;
+    status: 'active' | 'overdue' | 'cancelled';
+    started_at: string;
+    current_profile_count: number;
+    excess_profiles: number;
+    excess_amount: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface DbPaymentHistory {
+    id: string;
+    subscription_id: string;
+    amount: number;
+    base_amount: number;
+    excess_amount: number;
+    status: PaymentHistoryStatus;
+    payment_date: string | null;
+    due_date: string;
+    gateway_reference: string | null;
+    created_at: string;
+}
+
 // ============================================
 // JOINED TYPES (for queries with relations)
 // ============================================
@@ -116,4 +149,13 @@ export interface DbReviewWithRelations extends DbReview {
 export interface DbCashbackBalanceWithRelations extends DbCashbackBalance {
     company?: DbCompany;
     user?: DbProfile;
+}
+
+export interface DbSubscriptionWithRelations extends DbSubscription {
+    companies?: DbCompany;
+    plans?: DbPlan;
+}
+
+export interface DbPaymentHistoryWithRelations extends DbPaymentHistory {
+    subscription?: DbSubscription;
 }

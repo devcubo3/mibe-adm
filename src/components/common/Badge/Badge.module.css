@@ -35,3 +35,11 @@
 .badgeError .badgeText {
   color: #FF3B30;
 }
+
+.badgeWarning {
+  background-color: rgba(255, 149, 0, 0.1);
+}
+
+.badgeWarning .badgeText {
+  color: #FF9500;
+}

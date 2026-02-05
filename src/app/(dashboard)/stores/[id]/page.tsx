@@ -185,14 +185,25 @@ export default function StoreDetailPage() {
             <PageLayout title="Detalhes do Estabelecimento">
                 <div className={styles.detailPage}>
                     {/* Back Button */}
-                    <button className={styles.backButton} onClick={handleBack}>
+                    <button className={styles.backButton} onClick={handleBack} style={{ margin: '24px' }}>
                         <IoArrowBack size={20} />
                         Voltar para lista
                     </button>
 
+                    {/* Cover Image */}
+                    <div className={styles.coverContainer}>
+                        <Image
+                            src={store.coverImage || '/placeholder-cover.jpg'}
+                            alt={`${store.name} cover`}
+                            fill
+                            style={{ objectFit: 'cover' }}
+                            priority
+                        />
+                    </div>
+
                     {/* Header */}
                     <div className={styles.header}>
-                        <div className={styles.storeLogo}>
+                        <div className={styles.storeLogo} style={{ border: '4px solid var(--color-background)' }}>
                             <Image
                                 src={store.logo || '/placeholder-store.png'}
                                 alt={store.name}

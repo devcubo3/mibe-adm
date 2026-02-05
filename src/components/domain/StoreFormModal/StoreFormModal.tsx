@@ -5,6 +5,7 @@ import { Button, Input, Modal, SelectInput, ImageUpload } from '@/components/com
 import { CreateStoreDTO } from '@/types';
 import { formatCNPJ, formatCPF, formatPhone } from '@/utils/formatters';
 import { categoryService, CategoryOption } from '@/services/categoryService';
+import { storageService } from '@/services/storageService';
 import styles from './StoreFormModal.module.css';
 
 interface StoreFormModalProps {
@@ -25,8 +26,6 @@ interface FormData {
     cashbackDays: string;
     minPurchase: string;
     email: string;
-    password: string;
-    confirmPassword: string;
 }
 
 interface FormErrors {
@@ -45,12 +44,12 @@ const initialFormData: FormData = {
     cashbackDays: '',
     minPurchase: '',
     email: '',
-    password: '',
-    confirmPassword: '',
 };
 
 const StoreFormModal: React.FC<StoreFormModalProps> = ({ isOpen, onClose, onSubmit }) => {
     const [formData, setFormData] = useState<FormData>(initialFormData);
+    const [logoFile, setLogoFile] = useState<File | null>(null);
+    const [coverFile, setCoverFile] = useState<File | null>(null);
     const [errors, setErrors] = useState<FormErrors>({});
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<CategoryOption[]>([]);
@@ -92,16 +91,7 @@ const StoreFormModal: React.FC<StoreFormModalProps> = ({ isOpen, onClose, onSubm
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
             newErrors.email = 'Email inválido';
         }
-        if (!formData.password.trim()) {
-            newErrors.password = 'Senha é obrigatória';
-        } else if (formData.password.length < 6) {
-            newErrors.password = 'Senha deve ter pelo menos 6 caracteres';
-        }
-        if (!formData.confirmPassword.trim()) {
-            newErrors.confirmPassword = 'Confirmação de senha é obrigatória';
-        } else if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = 'As senhas não coincidem';
-        }
+
 
         // Validação do percentual de cashback apenas se preenchido
         if (formData.cashbackPercentage.trim()) {
@@ -120,13 +110,28 @@ const StoreFormModal: React.FC<StoreFormModalProps> = ({ isOpen, onClose, onSubm
 
         setLoading(true);
         try {
+            let logoUrl = formData.logo || '/placeholder-logo.jpg';
+            let coverUrl = formData.coverImage || '/placeholder-cover.jpg';
+
+            // Upload logo if file selected
+            if (logoFile) {
+                const fileName = `logos/${Date.now()}-${logoFile.name}`;
+                logoUrl = await storageService.uploadFile(logoFile, fileName);
+            }
+
+            // Upload cover if file selected
+            if (coverFile) {
+                const fileName = `covers/${Date.now()}-${coverFile.name}`;
+                coverUrl = await storageService.uploadFile(coverFile, fileName);
+            }
+
             const storeData: CreateStoreDTO = {
                 name: formData.name,
                 cnpj: formData.cnpj,
                 category: formData.category,
                 description: '',
-                coverImage: formData.coverImage || '/placeholder-cover.jpg',
-                logo: formData.logo || '/placeholder-logo.jpg',
+                coverImage: coverUrl,
+                logo: logoUrl,
                 address: formData.address,
                 contact: formData.contact,
                 coordinates: { latitude: 0, longitude: 0 },
@@ -143,12 +148,16 @@ const StoreFormModal: React.FC<StoreFormModalProps> = ({ isOpen, onClose, onSubm
                 },
 
                 email: formData.email,
-                password: formData.password,
             };
 
             await onSubmit(storeData);
             setFormData(initialFormData);
+            setLogoFile(null);
+            setCoverFile(null);
             onClose();
+        } catch (error) {
+            console.error('Error submitting store:', error);
+            // Error handling is likely handled by the parent or toast
         } finally {
             setLoading(false);
         }
@@ -156,6 +165,8 @@ const StoreFormModal: React.FC<StoreFormModalProps> = ({ isOpen, onClose, onSubm
 
     const handleClose = () => {
         setFormData(initialFormData);
+        setLogoFile(null);
+        setCoverFile(null);
         setErrors({});
         onClose();
     };
@@ -171,12 +182,14 @@ const StoreFormModal: React.FC<StoreFormModalProps> = ({ isOpen, onClose, onSubm
                             label="Foto de Perfil"
                             value={formData.logo}
                             onChange={handleChange('logo')}
+                            onFileChange={setLogoFile}
                             variant="profile"
                         />
                         <ImageUpload
                             label="Foto de Capa"
                             value={formData.coverImage}
                             onChange={handleChange('coverImage')}
+                            onFileChange={setCoverFile}
                             variant="cover"
                             className={styles.coverUpload}
                         />
@@ -271,26 +284,6 @@ const StoreFormModal: React.FC<StoreFormModalProps> = ({ isOpen, onClose, onSubm
                         type="email"
                         error={errors.email}
                     />
-                    <div className={styles.row}>
-                        <Input
-                            label="Senha *"
-                            placeholder="Mínimo 6 caracteres"
-                            value={formData.password}
-                            onChange={handleChange('password')}
-                            type="password"
-                            error={errors.password}
-                            className={styles.halfWidth}
-                        />
-                        <Input
-                            label="Confirmar Senha *"
-                            placeholder="Repetir senha"
-                            value={formData.confirmPassword}
-                            onChange={handleChange('confirmPassword')}
-                            type="password"
-                            error={errors.confirmPassword}
-                            className={styles.halfWidth}
-                        />
-                    </div>
                 </div>
 
                 {/* Botões */}

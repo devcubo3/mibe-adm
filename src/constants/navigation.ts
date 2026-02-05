@@ -25,11 +25,22 @@ export const SIDEBAR_ITEMS = [
     path: '/reviews',
   },
   {
+    label: 'Planos',
+    icon: 'IoDocumentTextOutline',
+    path: '/plans',
+  },
+  {
+    label: 'Assinaturas',
+    icon: 'IoCardOutline',
+    path: '/subscriptions',
+  },
+  {
     label: 'Configurações',
     icon: 'IoSettingsOutline',
     path: '/settings',
   },
 ];
+
 
 export const STORE_CATEGORIES = [
   { value: 'restaurante', label: 'Restaurante' },

@@ -8,6 +8,7 @@ interface ImageUploadProps {
     label?: string;
     value: string;
     onChange: (value: string) => void;
+    onFileChange?: (file: File | null) => void;
     variant?: 'profile' | 'cover';
     error?: string;
     className?: string;
@@ -17,6 +18,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     label,
     value,
     onChange,
+    onFileChange,
     variant = 'profile',
     error,
     className,
@@ -30,6 +32,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Emits the File object for storage upload
+            if (onFileChange) {
+                onFileChange(file);
+            }
+
+            // Keep the DataURL for preview purposes
             const reader = new FileReader();
             reader.onloadend = () => {
                 onChange(reader.result as string);
@@ -41,6 +49,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     const handleRemove = (e: React.MouseEvent) => {
         e.stopPropagation();
         onChange('');
+        if (onFileChange) {
+            onFileChange(null);
+        }
         if (inputRef.current) {
             inputRef.current.value = '';
         }

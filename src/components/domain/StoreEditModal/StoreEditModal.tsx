@@ -5,6 +5,7 @@ import { Button, Input, Modal, SelectInput, ImageUpload } from '@/components/com
 import { Store, UpdateStoreDTO } from '@/types';
 import { formatCNPJ, formatCPF, formatPhone } from '@/utils/formatters';
 import { categoryService, CategoryOption } from '@/services/categoryService';
+import { storageService } from '@/services/storageService';
 import styles from './StoreEditModal.module.css';
 
 interface StoreEditModalProps {
@@ -54,6 +55,8 @@ const initialFormData: FormData = {
 
 const StoreEditModal: React.FC<StoreEditModalProps> = ({ isOpen, onClose, onSubmit, store }) => {
     const [formData, setFormData] = useState<FormData>(initialFormData);
+    const [logoFile, setLogoFile] = useState<File | null>(null);
+    const [coverFile, setCoverFile] = useState<File | null>(null);
     const [errors, setErrors] = useState<FormErrors>({});
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<CategoryOption[]>([]);
@@ -90,6 +93,9 @@ const StoreEditModal: React.FC<StoreEditModalProps> = ({ isOpen, onClose, onSubm
                 rulesDescription: store.rules?.description || '',
                 email: store.email || '',
             });
+            // Reset files when store changes
+            setLogoFile(null);
+            setCoverFile(null);
         }
     }, [store]);
 
@@ -135,13 +141,54 @@ const StoreEditModal: React.FC<StoreEditModalProps> = ({ isOpen, onClose, onSubm
 
         setLoading(true);
         try {
+            let logoUrl = formData.logo;
+            let coverUrl = formData.coverImage;
+
+            // Upload logo if new file selected
+            if (logoFile) {
+                const fileName = `logos/${Date.now()}-${logoFile.name}`;
+                logoUrl = await storageService.uploadFile(logoFile, fileName);
+
+                // Optional: Delete old logo from storage if it was a storage URL
+                if (store.logo && store.logo.includes('supabase.co')) {
+                    const oldPath = storageService.getPathFromUrl(store.logo);
+                    if (oldPath) await storageService.deleteFile(oldPath).catch(console.error);
+                }
+            } else if (!formData.logo && store.logo) {
+                // If logo was cleared
+                logoUrl = '/placeholder-logo.jpg';
+                if (store.logo.includes('supabase.co')) {
+                    const oldPath = storageService.getPathFromUrl(store.logo);
+                    if (oldPath) await storageService.deleteFile(oldPath).catch(console.error);
+                }
+            }
+
+            // Upload cover if new file selected
+            if (coverFile) {
+                const fileName = `covers/${Date.now()}-${coverFile.name}`;
+                coverUrl = await storageService.uploadFile(coverFile, fileName);
+
+                // Optional: Delete old cover from storage if it was a storage URL
+                if (store.coverImage && store.coverImage.includes('supabase.co')) {
+                    const oldPath = storageService.getPathFromUrl(store.coverImage);
+                    if (oldPath) await storageService.deleteFile(oldPath).catch(console.error);
+                }
+            } else if (!formData.coverImage && store.coverImage) {
+                // If cover was cleared
+                coverUrl = '/placeholder-cover.jpg';
+                if (store.coverImage.includes('supabase.co')) {
+                    const oldPath = storageService.getPathFromUrl(store.coverImage);
+                    if (oldPath) await storageService.deleteFile(oldPath).catch(console.error);
+                }
+            }
+
             const storeData: UpdateStoreDTO = {
                 name: formData.name,
                 cnpj: formData.cnpj,
                 category: formData.category,
                 description: formData.description,
-                coverImage: formData.coverImage || '/placeholder-cover.jpg',
-                logo: formData.logo || '/placeholder-logo.jpg',
+                coverImage: coverUrl || '/placeholder-cover.jpg',
+                logo: logoUrl || '/placeholder-logo.jpg',
                 address: formData.address,
                 contact: formData.contact,
                 coordinates: store.coordinates, // Manter coordenadas originais
@@ -160,7 +207,11 @@ const StoreEditModal: React.FC<StoreEditModalProps> = ({ isOpen, onClose, onSubm
             };
 
             await onSubmit(store.id, storeData);
+            setLogoFile(null);
+            setCoverFile(null);
             onClose();
+        } catch (error) {
+            console.error('Error updating store:', error);
         } finally {
             setLoading(false);
         }
@@ -182,12 +233,14 @@ const StoreEditModal: React.FC<StoreEditModalProps> = ({ isOpen, onClose, onSubm
                             label="Foto de Perfil"
                             value={formData.logo}
                             onChange={handleChange('logo')}
+                            onFileChange={setLogoFile}
                             variant="profile"
                         />
                         <ImageUpload
                             label="Foto de Capa"
                             value={formData.coverImage}
                             onChange={handleChange('coverImage')}
+                            onFileChange={setCoverFile}
                             variant="cover"
                             className={styles.coverUpload}
                         />

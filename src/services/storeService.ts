@@ -2,6 +2,8 @@ import { Store, CreateStoreDTO, UpdateStoreDTO, Review } from '@/types';
 import { DbCompanyWithRelations, DbReviewWithRelations } from '@/types/database.types';
 import { supabase } from '@/lib/supabase';
 import { mapDbCompanyToStore, mapDbReviewToReview } from '@/lib/mappers';
+import { asaasService } from './asaasService';
+
 
 export const storeService = {
   getAll: async (): Promise<Store[]> => {
@@ -72,6 +74,8 @@ export const storeService = {
         status: 'pending',
         category_id: categoryId,
         email: data.email,
+        address: data.address,
+        phone: data.contact,
       })
       .select(`
         *,
@@ -86,8 +90,34 @@ export const storeService = {
       throw new Error(`Erro ao criar estabelecimento: ${error.message || error.code || 'Erro desconhecido'}`);
     }
 
+    // Create customer in Asaas and update company with asaas_customer_id
+    if (data.cnpj) {
+      try {
+        const asaasCustomer = await asaasService.createCustomer({
+          name: data.name,
+          cpfCnpj: data.cnpj,
+          email: data.email,
+          phone: data.contact,
+          address: data.address,
+          externalReference: inserted.id, // company_id para referência cruzada
+        });
+
+        // Update company with Asaas customer ID
+        await supabase
+          .from('companies')
+          .update({ asaas_customer_id: asaasCustomer.id })
+          .eq('id', inserted.id);
+
+        console.log(`Asaas customer ${asaasCustomer.id} linked to company ${inserted.id}`);
+      } catch (asaasError) {
+        // Log error but don't fail the store creation
+        console.error('Failed to create Asaas customer, store created without Asaas integration:', asaasError);
+      }
+    }
+
     return mapDbCompanyToStore(inserted as DbCompanyWithRelations);
   },
+
 
   update: async (id: string, data: UpdateStoreDTO): Promise<Store> => {
     // Map frontend DTO to database columns (only include defined fields)
@@ -116,10 +146,10 @@ export const storeService = {
       updateData.category_id = categoryData?.id || null;
     }
 
-    // Map email if provided
-    if (data.email !== undefined) {
-      updateData.email = data.email;
-    }
+    // Map email, address and phone if provided
+    if (data.email !== undefined) updateData.email = data.email;
+    if (data.address !== undefined) updateData.address = data.address;
+    if (data.contact !== undefined) updateData.phone = data.contact;
 
     const { data: updated, error } = await supabase
       .from('companies')

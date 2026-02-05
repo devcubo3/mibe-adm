@@ -23,9 +23,9 @@ export function mapDbCompanyToStore(company: DbCompanyWithRelations): Store {
         logo: company.logo_url || '',
         rating: 0, // Will be calculated from reviews
         totalReviews: 0, // Will be calculated from reviews
-        address: '', // Not in current DB schema - will need to be added later
-        contact: '', // Not in current DB schema - will need to be added later
-        email: (company as any).email || '', // Email do estabelecimento
+        address: company.address || '',
+        contact: company.phone || '',
+        email: company.email || '',
         coordinates: {
             latitude: 0,
             longitude: 0,

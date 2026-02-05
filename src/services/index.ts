@@ -6,3 +6,6 @@ export * from './userService';
 export * from './transactionService';
 export * from './reviewService';
 export * from './companyUserService';
+export * from './planService';
+export * from './subscriptionService';
+export * from './asaasService';

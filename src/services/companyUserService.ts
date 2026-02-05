@@ -1,5 +1,6 @@
 import { CompanyUser, CreateCompanyUserDTO, UpdateCompanyUserDTO, DbCompanyUser } from '@/types';
 import { supabase } from '@/lib/supabase';
+import bcrypt from 'bcryptjs';
 
 // Mapper function
 const mapDbToCompanyUser = (db: DbCompanyUser): CompanyUser => ({
@@ -12,13 +13,12 @@ const mapDbToCompanyUser = (db: DbCompanyUser): CompanyUser => ({
     updatedAt: db.updated_at,
 });
 
-// Simple hash function for password (in production, use bcrypt via Edge Function)
-const simpleHash = async (password: string): Promise<string> => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+/**
+ * Hashes a password using Bcrypt
+ * Salt rounds: 10 (standard)
+ */
+const hashPassword = async (password: string): Promise<string> => {
+    return bcrypt.hash(password, 10);
 };
 
 export const companyUserService = {
@@ -53,7 +53,7 @@ export const companyUserService = {
     },
 
     create: async (dto: CreateCompanyUserDTO): Promise<CompanyUser> => {
-        const passwordHash = await simpleHash(dto.password);
+        const passwordHash = await hashPassword(dto.password);
 
         const { data, error } = await supabase
             .from('company_users')
@@ -69,7 +69,7 @@ export const companyUserService = {
         if (error) {
             console.error('Error creating company user:', error);
             if (error.code === '23505') {
-                throw new Error('Já existe um usuário com este email neste estabelecimento');
+                throw new Error('Já existe um usuário cadastrado com este email');
             }
             throw new Error('Erro ao criar usuário');
         }
@@ -84,7 +84,7 @@ export const companyUserService = {
         if (dto.email !== undefined) updateData.email = dto.email;
         if (dto.isActive !== undefined) updateData.is_active = dto.isActive;
         if (dto.password) {
-            updateData.password_hash = await simpleHash(dto.password);
+            updateData.password_hash = await hashPassword(dto.password);
         }
 
         const { data, error } = await supabase
@@ -97,7 +97,7 @@ export const companyUserService = {
         if (error) {
             console.error('Error updating company user:', error);
             if (error.code === '23505') {
-                throw new Error('Já existe um usuário com este email neste estabelecimento');
+                throw new Error('Já existe um usuário cadastrado com este email');
             }
             throw new Error('Erro ao atualizar usuário');
         }

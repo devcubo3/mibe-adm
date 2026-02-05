@@ -1,109 +1,78 @@
-import { LoginCredentials, RegisterData, AuthResponse, User } from '@/types';
+import { createClient } from '@/lib/supabase/client';
+import { LoginCredentials, User } from '@/types';
+import { DbProfile } from '@/types/database.types';
 
-// Mock user for development
-const MOCK_USER: User = {
-  id: '1',
-  name: 'Admin MIBE',
-  email: 'admin@mibe.com',
-  cpf: '123.456.789-00',
-  birthDate: '1990-01-01',
-  phone: '(11) 99999-9999',
-  avatar: 'https://ui-avatars.com/api/?name=Admin+MIBE&background=181818&color=fff',
-  role: 'admin',
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-};
-
-const MOCK_TOKEN = 'mock-jwt-token-12345';
-
-// Simula delay de rede
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+function mapProfileToUser(profile: DbProfile, email: string): User {
+  return {
+    id: profile.id,
+    name: profile.full_name,
+    email,
+    cpf: profile.cpf,
+    birthDate: profile.birth_date || '',
+    phone: profile.phone || '',
+    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.full_name)}&background=181818&color=fff`,
+    role: profile.role === 'super_admin' ? 'admin' :
+      profile.role === 'company_owner' ? 'store_owner' : 'user',
+    createdAt: profile.created_at,
+    updatedAt: profile.created_at,
+  };
+}
 
 export const authService = {
-  login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    await delay(800); // Simula latência de rede
+  login: async (credentials: LoginCredentials): Promise<{ user: User }> => {
+    const supabase = createClient();
 
-    // Mock: aceita qualquer senha para o email admin@mibe.com
-    if (credentials.email === 'admin@mibe.com') {
-      return {
-        user: MOCK_USER,
-        token: MOCK_TOKEN,
-      };
+    const { data: authData, error: authError } =
+      await supabase.auth.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password,
+      });
+
+    if (authError) {
+      throw new Error('Credenciais inválidas');
     }
 
-    // Simula erro de login
-    throw new Error('Credenciais inválidas');
-  },
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', authData.user.id)
+      .single();
 
-  register: async (data: RegisterData): Promise<AuthResponse> => {
-    await delay(800);
+    if (profileError || !profile) {
+      await supabase.auth.signOut();
+      throw new Error('Perfil não encontrado');
+    }
 
-    // Mock: cria um novo usuário
-    const newUser: User = {
-      id: Math.random().toString(36).substr(2, 9),
-      name: data.name,
-      email: data.email,
-      cpf: data.cpf,
-      birthDate: data.birthDate,
-      phone: data.phone,
-      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
-        data.name
-      )}&background=181818&color=fff`,
-      role: 'user',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    if ((profile as DbProfile).role !== 'super_admin') {
+      await supabase.auth.signOut();
+      throw new Error('Acesso negado. Apenas administradores podem acessar este painel.');
+    }
 
     return {
-      user: newUser,
-      token: MOCK_TOKEN,
+      user: mapProfileToUser(profile as DbProfile, authData.user.email!),
     };
   },
 
   logout: async (): Promise<void> => {
-    await delay(300);
-    // Mock: apenas simula logout
+    const supabase = createClient();
+    const { error } = await supabase.auth.signOut();
+    if (error) throw new Error(error.message);
   },
 
-  getMe: async (): Promise<User> => {
-    await delay(500);
-    return MOCK_USER;
-  },
+  getCurrentUser: async (): Promise<User | null> => {
+    const supabase = createClient();
 
-  refreshToken: async (): Promise<{ token: string }> => {
-    await delay(300);
-    return { token: MOCK_TOKEN };
-  },
-};
+    const { data: { user: authUser }, error } = await supabase.auth.getUser();
+    if (error || !authUser) return null;
 
-// Para usar API real no futuro, descomente o código abaixo e comente o código mock acima:
-/*
-import api from './api';
-import { API_ENDPOINTS } from '@/constants/api';
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', authUser.id)
+      .single();
 
-export const authService = {
-  login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    const response = await api.post(API_ENDPOINTS.AUTH_LOGIN, credentials);
-    return response.data;
-  },
+    if (!profile || (profile as DbProfile).role !== 'super_admin') return null;
 
-  register: async (data: RegisterData): Promise<AuthResponse> => {
-    const response = await api.post(API_ENDPOINTS.AUTH_REGISTER, data);
-    return response.data;
-  },
-
-  logout: async (): Promise<void> => {
-    await api.post(API_ENDPOINTS.AUTH_LOGOUT);
-  },
-
-  getMe: async (): Promise<User> => {
-    const response = await api.get(API_ENDPOINTS.AUTH_ME);
-    return response.data;
-  },
-
-  refreshToken: async (): Promise<{ token: string }> => {
-    const response = await api.post(API_ENDPOINTS.AUTH_REFRESH);
-    return response.data;
+    return mapProfileToUser(profile as DbProfile, authUser.email!);
   },
 };
-*/

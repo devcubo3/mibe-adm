@@ -4,7 +4,7 @@ import styles from './Badge.module.css';
 interface BadgeProps {
   children?: React.ReactNode;
   text?: string;
-  variant?: 'default' | 'primary' | 'success' | 'error';
+  variant?: 'default' | 'primary' | 'success' | 'warning' | 'error';
   className?: string;
 }
 
@@ -13,6 +13,7 @@ const Badge: React.FC<BadgeProps> = ({ children, text, variant = 'default', clas
     default: '',
     primary: styles.badgePrimary,
     success: styles.badgeSuccess,
+    warning: styles.badgeWarning,
     error: styles.badgeError,
   }[variant];
 
