@@ -146,7 +146,7 @@ export const storeService = {
       updateData.category_id = categoryData?.id || null;
     }
 
-    // Map email, address and phone if provided
+    if (data.status !== undefined) updateData.status = data.status;
     if (data.email !== undefined) updateData.email = data.email;
     if (data.address !== undefined) updateData.address = data.address;
     if (data.contact !== undefined) updateData.phone = data.contact;
@@ -171,6 +171,25 @@ export const storeService = {
   },
 
   delete: async (id: string): Promise<void> => {
+    // 1. Get subscriptions to clean up payment history
+    const { data: subs } = await supabase
+      .from('subscriptions')
+      .select('id')
+      .eq('company_id', id);
+
+    if (subs && subs.length > 0) {
+      const subIds = subs.map(s => s.id);
+      await supabase.from('payment_history').delete().in('subscription_id', subIds);
+    }
+
+    // 2. Delete other related data that might not cascade
+    await Promise.all([
+      supabase.from('transactions').delete().eq('company_id', id),
+      supabase.from('reviews').delete().eq('company_id', id),
+      supabase.from('cashback_balances').delete().eq('company_id', id),
+    ]);
+
+    // 3. Delete the company (cascades to subscriptions, company_users, store_gallery)
     const { error } = await supabase
       .from('companies')
       .delete()

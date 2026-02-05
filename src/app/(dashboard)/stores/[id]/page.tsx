@@ -92,8 +92,37 @@ export default function StoreDetailPage() {
         }
     };
 
-    const handleToggleStatus = () => {
-        toast('Funcionalidade em desenvolvimento', { icon: '🚧' });
+    const handleToggleStatus = async () => {
+        if (!store) return;
+
+        try {
+            const newStatus = store.status === 'active' ? 'inactive' : 'active';
+            const updatedStore = await storeService.update(storeId, { status: newStatus });
+            setStore(updatedStore);
+            toast.success(newStatus === 'active' ? 'Estabelecimento ativado!' : 'Estabelecimento desativado!');
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'Erro ao alterar status';
+            toast.error(errorMessage);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!store) return;
+
+        if (!confirm(`Tem certeza que deseja excluir o estabelecimento "${store.name}"? Esta ação excluirá todos os dados relacionados e não pode ser desfeita.`)) {
+            return;
+        }
+
+        try {
+            setLoading(true);
+            await storeService.delete(storeId);
+            toast.success('Estabelecimento excluído com sucesso!');
+            router.push('/stores');
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'Erro ao excluir estabelecimento';
+            toast.error(errorMessage);
+            setLoading(false);
+        }
     };
 
     // Company User handlers
@@ -226,7 +255,18 @@ export default function StoreDetailPage() {
                         </div>
                         <div className={styles.headerActions}>
                             <Button title="Editar" variant="secondary" onClick={handleEdit} />
-                            <Button title="Desativar" variant="secondary" onClick={handleToggleStatus} />
+                            <Button
+                                title={store.status === 'inactive' ? 'Ativar' : 'Desativar'}
+                                variant="secondary"
+                                onClick={handleToggleStatus}
+                            />
+                            {store.status === 'inactive' && (
+                                <Button
+                                    title="Excluir"
+                                    onClick={handleDelete}
+                                    style={{ backgroundColor: '#FF3B30', color: '#FFF', borderColor: '#FF3B30' }}
+                                />
+                            )}
                         </div>
                     </div>
 

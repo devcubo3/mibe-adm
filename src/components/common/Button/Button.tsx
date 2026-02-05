@@ -11,6 +11,7 @@ interface ButtonProps {
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -21,6 +22,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   type = 'button',
   className,
+  style,
 }) => {
   const isPrimary = variant === 'primary';
 
@@ -35,6 +37,7 @@ const Button: React.FC<ButtonProps> = ({
       `.trim()}
       onClick={onClick}
       disabled={disabled || loading}
+      style={style}
     >
       {loading ? <span className={styles.spinner}>Carregando...</span> : title}
     </button>

@@ -32,6 +32,7 @@ export interface Store {
   };
   owner: StoreOwner;
   photos: string[];
+  status: 'active' | 'inactive' | 'pending';
   createdAt: string;
   updatedAt: string;
 }
@@ -63,4 +64,6 @@ export interface CreateStoreDTO {
   photos?: string[];
 }
 
-export interface UpdateStoreDTO extends Partial<Omit<CreateStoreDTO, 'password'>> { }
+export interface UpdateStoreDTO extends Partial<Omit<CreateStoreDTO, 'password'>> {
+  status?: 'active' | 'inactive' | 'pending';
+}

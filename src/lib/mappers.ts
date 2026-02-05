@@ -47,6 +47,7 @@ export function mapDbCompanyToStore(company: DbCompanyWithRelations): Store {
             contact: company.owner?.phone || '',
         },
         photos: [],
+        status: (company.status as 'active' | 'inactive' | 'pending') || 'pending',
         createdAt: company.created_at,
         updatedAt: company.created_at,
     };
