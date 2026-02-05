@@ -39,8 +39,14 @@ Thumbs.db
 # Testing
 coverage/
 .nyc_output/
+scripts/
+**/*.test.{js,jsx,ts,tsx}
+**/*.spec.{js,jsx,ts,tsx}
+**/*.debug.{js,jsx,ts,tsx}
 
 # Misc
 *.log
 *.cache
 .vercel/
+.claude/
+**/settings.local.json
