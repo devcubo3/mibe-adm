@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import { useAuthStore } from '@/store/authStore';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const login = useAuthStore((state) => state.login);
+  const setUser = useAuthStore((state) => state.setUser);
 
   useEffect(() => {
     // Restore auth state from localStorage on mount
@@ -16,7 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       if (token && userStr) {
         try {
           const user = JSON.parse(userStr);
-          login(user, token);
+          setUser(user);
         } catch (error) {
           console.error('Error parsing user from localStorage:', error);
           localStorage.removeItem('token');
@@ -24,7 +24,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         }
       }
     }
-  }, [login]);
+  }, [setUser]);
 
   return (
     <>
