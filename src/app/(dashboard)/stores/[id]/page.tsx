@@ -13,6 +13,8 @@ import {
     IoStar,
     IoPersonAddOutline,
     IoPeopleOutline,
+    IoStorefrontOutline,
+    IoImageOutline,
 } from 'react-icons/io5';
 import { DashboardLayout, PageLayout } from '@/components/layout';
 import { Button } from '@/components/common';
@@ -221,24 +223,36 @@ export default function StoreDetailPage() {
 
                     {/* Cover Image */}
                     <div className={styles.coverContainer}>
-                        <Image
-                            src={store.coverImage || '/placeholder-cover.jpg'}
-                            alt={`${store.name} cover`}
-                            fill
-                            style={{ objectFit: 'cover' }}
-                            priority
-                        />
+                        {store.coverImage ? (
+                            <Image
+                                src={store.coverImage}
+                                alt={`${store.name} cover`}
+                                fill
+                                style={{ objectFit: 'cover' }}
+                                priority
+                            />
+                        ) : (
+                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}>
+                                <IoImageOutline size={48} color="#999999" />
+                            </div>
+                        )}
                     </div>
 
                     {/* Header */}
                     <div className={styles.header}>
                         <div className={styles.storeLogo} style={{ border: '4px solid var(--color-background)' }}>
-                            <Image
-                                src={store.logo || '/placeholder-store.png'}
-                                alt={store.name}
-                                fill
-                                style={{ objectFit: 'cover' }}
-                            />
+                            {store.logo ? (
+                                <Image
+                                    src={store.logo}
+                                    alt={store.name}
+                                    fill
+                                    style={{ objectFit: 'cover' }}
+                                />
+                            ) : (
+                                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}>
+                                    <IoStorefrontOutline size={40} color="#999999" />
+                                </div>
+                            )}
                         </div>
                         <div className={styles.storeInfo}>
                             <h1 className={styles.storeName}>{store.name}</h1>
