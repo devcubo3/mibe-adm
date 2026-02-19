@@ -2,13 +2,13 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { IoStarOutline } from 'react-icons/io5';
+import { IoStarOutline, IoStorefrontOutline } from 'react-icons/io5';
 import styles from './StoreCard.module.css';
 
 interface StoreCardProps {
   name: string;
   category: string;
-  image: string;
+  image?: string;
   rating?: number;
   distance?: string;
   onClick?: () => void;
@@ -18,7 +18,13 @@ const StoreCard: React.FC<StoreCardProps> = ({ name, category, image, rating, di
   return (
     <div className={styles.storeCard} onClick={onClick}>
       <div className={styles.storeCardImage}>
-        <Image src={image || '/placeholder-store.png'} alt={name} fill style={{ objectFit: 'cover' }} />
+        {image ? (
+          <Image src={image} alt={name} fill style={{ objectFit: 'cover' }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}>
+            <IoStorefrontOutline size={32} color="#999999" />
+          </div>
+        )}
       </div>
       <div className={styles.storeCardContent}>
         <h3 className={styles.storeCardName}>{name}</h3>
