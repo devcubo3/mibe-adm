@@ -21,6 +21,7 @@ export interface DbProfile {
     full_name: string;
     phone: string | null;
     birth_date: string | null;
+    avatar_url: string | null;
     role: UserRole;
     created_at: string;
 }

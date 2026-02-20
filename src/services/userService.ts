@@ -13,7 +13,7 @@ function mapDbProfileToUser(profile: DbProfile): User {
     cpf: profile.cpf,
     birthDate: profile.birth_date || '',
     phone: profile.phone || '',
-    avatar: '', // Not in current DB schema
+    avatar: profile.avatar_url || '',
     role: profile.role === 'super_admin' ? 'admin' :
       profile.role === 'company_owner' ? 'store_owner' : 'user',
     createdAt: profile.created_at,
