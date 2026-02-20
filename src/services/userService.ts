@@ -2,14 +2,18 @@ import { User } from '@/types';
 import { DbProfile } from '@/types/database.types';
 import { supabase } from '@/lib/supabase';
 
+interface DbProfileWithEmail extends DbProfile {
+  email?: string;
+}
+
 /**
  * Maps a Supabase profile to the frontend User type
  */
-function mapDbProfileToUser(profile: DbProfile): User {
+function mapDbProfileToUser(profile: DbProfileWithEmail): User {
   return {
     id: profile.id,
     name: profile.full_name,
-    email: '', // Email is in auth.users, not profiles
+    email: profile.email || '',
     cpf: profile.cpf,
     birthDate: profile.birth_date || '',
     phone: profile.phone || '',
@@ -23,17 +27,15 @@ function mapDbProfileToUser(profile: DbProfile): User {
 
 export const userService = {
   getAll: async (): Promise<User[]> => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const res = await fetch('/api/users');
 
-    if (error) {
-      console.error('Error fetching users:', error);
+    if (!res.ok) {
+      console.error('Error fetching users:', res.statusText);
       throw new Error('Erro ao carregar usuários');
     }
 
-    return (data as DbProfile[]).map(mapDbProfileToUser);
+    const data: DbProfileWithEmail[] = await res.json();
+    return data.map(mapDbProfileToUser);
   },
 
   getById: async (id: string): Promise<User> => {
