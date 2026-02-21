@@ -135,12 +135,18 @@ export default function WalletDetailPage() {
                         <div className={styles.infoCard}>
                             <div className={styles.infoCardHeader}>
                                 <div className={styles.infoCardLogo}>
-                                    <Image
-                                        src={wallet.storeLogo || '/placeholder-store.png'}
-                                        alt={wallet.storeName}
-                                        fill
-                                        style={{ objectFit: 'cover' }}
-                                    />
+                                    {wallet.storeLogo ? (
+                                        <Image
+                                            src={wallet.storeLogo}
+                                            alt={wallet.storeName}
+                                            fill
+                                            style={{ objectFit: 'cover' }}
+                                        />
+                                    ) : (
+                                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}>
+                                            <IoStorefrontOutline size={20} color="#999999" />
+                                        </div>
+                                    )}
                                 </div>
                                 <div>
                                     <h3 className={styles.infoCardTitle}>{wallet.storeName}</h3>

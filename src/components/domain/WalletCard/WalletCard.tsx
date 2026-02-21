@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { IoStorefrontOutline } from 'react-icons/io5';
 import { formatCurrency, getDaysUntilExpiration } from '@/utils';
 import styles from './WalletCard.module.css';
 
@@ -20,7 +21,13 @@ const WalletCard: React.FC<WalletCardProps> = ({ storeName, storeLogo, balance, 
     <div className={styles.walletCard} onClick={onClick}>
       <div className={styles.walletCardHeader}>
         <div className={styles.walletLogo}>
-          <Image src={storeLogo || '/placeholder-store.png'} alt={storeName} fill style={{ objectFit: 'cover' }} />
+          {storeLogo ? (
+            <Image src={storeLogo} alt={storeName} fill style={{ objectFit: 'cover' }} />
+          ) : (
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}>
+              <IoStorefrontOutline size={24} color="#999999" />
+            </div>
+          )}
         </div>
         <div>
           <h3 className={styles.walletStoreName}>{storeName}</h3>
