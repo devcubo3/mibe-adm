@@ -16,9 +16,10 @@ interface WalletCardProps {
 
 const WalletCard: React.FC<WalletCardProps> = ({ storeName, storeLogo, balance, expiresAt, onClick }) => {
   const daysUntilExpiration = getDaysUntilExpiration(expiresAt);
+  const isExpired = daysUntilExpiration <= 0;
 
   return (
-    <div className={styles.walletCard} onClick={onClick}>
+    <div className={`${styles.walletCard} ${isExpired ? styles.walletCardExpired : ''}`} onClick={onClick}>
       <div className={styles.walletCardHeader}>
         <div className={styles.walletLogo}>
           {storeLogo ? (
@@ -31,13 +32,17 @@ const WalletCard: React.FC<WalletCardProps> = ({ storeName, storeLogo, balance, 
         </div>
         <div>
           <h3 className={styles.walletStoreName}>{storeName}</h3>
-          <div className={styles.walletExpiryBadge}>
-            <span className={styles.walletExpiryText}>Expira em {daysUntilExpiration} dias</span>
+          <div className={isExpired ? styles.walletExpiryBadgeExpired : styles.walletExpiryBadge}>
+            <span className={styles.walletExpiryText}>
+              {isExpired ? 'Expirada' : `Expira em ${daysUntilExpiration} dias`}
+            </span>
           </div>
         </div>
       </div>
       <div className={styles.walletCardFooter}>
-        <span className={styles.walletBalance}>{formatCurrency(balance)}</span>
+        <span className={styles.walletBalance}>
+          {isExpired ? 'Saldo expirado' : formatCurrency(balance)}
+        </span>
       </div>
     </div>
   );

@@ -64,3 +64,19 @@
   font-size: 24px;
   color: #ffffff;
 }
+
+.walletCardExpired {
+  opacity: 0.6;
+  border-color: #FF3B30;
+}
+
+.walletCardExpired:hover {
+  opacity: 0.8;
+}
+
+.walletExpiryBadgeExpired {
+  display: inline-block;
+  background-color: #FF3B30;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
