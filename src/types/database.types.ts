@@ -36,9 +36,7 @@ export interface DbPlan {
     id: string;
     name: string;
     description: string | null;
-    monthly_price: number;
-    user_limit: number;
-    excess_user_fee: number;
+    commission_percent: number;
     is_active: boolean;
     created_at: string;
     updated_at: string;
@@ -105,11 +103,11 @@ export interface DbSubscription {
     id: string;
     company_id: string;
     plan_id: string;
-    status: 'active' | 'overdue' | 'cancelled';
+    status: 'active' | 'overdue' | 'cancelled' | 'pending_payment';
     started_at: string;
-    current_profile_count: number;
-    excess_profiles: number;
-    excess_amount: number;
+    expires_at: string | null;
+    asaas_payment_id: string | null;
+    asaas_customer_id: string | null;
     created_at: string;
     updated_at: string;
 }
@@ -118,9 +116,9 @@ export interface DbPaymentHistory {
     id: string;
     subscription_id: string;
     amount: number;
-    base_amount: number;
-    excess_amount: number;
     status: PaymentHistoryStatus;
+    type: 'MENSALIDADE' | 'COMISSAO_DIARIA';
+    commission_date: string | null;
     payment_date: string | null;
     due_date: string;
     gateway_reference: string | null;

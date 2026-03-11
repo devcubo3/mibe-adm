@@ -1,10 +1,9 @@
 'use client';
 
 import React from 'react';
-import { IoCreateOutline, IoPeopleOutline, IoCashOutline, IoToggleOutline, IoToggle } from 'react-icons/io5';
+import { IoCreateOutline, IoTrendingUpOutline, IoToggleOutline, IoToggle } from 'react-icons/io5';
 import { Badge } from '@/components/common';
 import { Plan } from '@/types/plan.types';
-import { formatCurrency } from '@/utils/formatters';
 import styles from './PlanCard.module.css';
 
 interface PlanCardProps {
@@ -37,18 +36,14 @@ const PlanCard: React.FC<PlanCardProps> = ({
 
             <div className={styles.cardBody}>
                 <div className={styles.priceSection}>
-                    <span className={styles.price}>{formatCurrency(plan.monthlyPrice)}</span>
-                    <span className={styles.period}>/mês</span>
+                    <span className={styles.price}>{plan.commissionPercent}%</span>
+                    <span className={styles.period}>de comissão por venda</span>
                 </div>
 
                 <div className={styles.features}>
                     <div className={styles.featureItem}>
-                        <IoPeopleOutline className={styles.featureIcon} size={18} />
-                        <span>Até <strong>{plan.userLimit}</strong> clientes inclusos</span>
-                    </div>
-                    <div className={styles.featureItem}>
-                        <IoCashOutline className={styles.featureIcon} size={18} />
-                        <span><strong>{formatCurrency(plan.excessUserFee)}</strong> por cliente excedente</span>
+                        <IoTrendingUpOutline className={styles.featureIcon} size={18} />
+                        <span>Comissão cobrada sobre cada transação</span>
                     </div>
                 </div>
 

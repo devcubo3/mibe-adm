@@ -8,14 +8,12 @@ import { SubscriptionModal } from '@/components/domain';
 import { subscriptionService, planService } from '@/services';
 import { Subscription, SubscriptionStatus } from '@/types/subscription.types';
 import { Plan } from '@/types/plan.types';
-import { formatCurrency, formatISOToDate } from '@/utils/formatters';
+import { formatISOToDate } from '@/utils/formatters';
 import {
     IoArrowBackOutline,
     IoDocumentTextOutline,
-    IoPeopleOutline,
-    IoAlertCircleOutline,
-    IoCashOutline,
-    IoCalendarOutline
+    IoCalendarOutline,
+    IoTrendingUpOutline
 } from 'react-icons/io5';
 import toast from 'react-hot-toast';
 import styles from './details.module.css';
@@ -24,12 +22,14 @@ const STATUS_LABELS: Record<SubscriptionStatus, string> = {
     active: 'Ativo',
     overdue: 'Inadimplente',
     cancelled: 'Cancelado',
+    pending_payment: 'Aguardando Pagamento',
 };
 
-const STATUS_VARIANTS: Record<SubscriptionStatus, 'success' | 'warning' | 'error'> = {
+const STATUS_VARIANTS: Record<SubscriptionStatus, 'success' | 'warning' | 'error' | 'default'> = {
     active: 'success',
     overdue: 'warning',
     cancelled: 'error',
+    pending_payment: 'default',
 };
 
 export default function SubscriptionDetailsPage() {
@@ -135,10 +135,6 @@ export default function SubscriptionDetailsPage() {
         );
     }
 
-    const usagePercentage = plan?.userLimit
-        ? Math.min((subscription.currentProfileCount / plan.userLimit) * 100, 100)
-        : 0;
-
     return (
         <DashboardLayout>
             <PageLayout
@@ -174,73 +170,12 @@ export default function SubscriptionDetailsPage() {
                                 <span className={styles.value}>{plan?.name || subscription.planName || 'N/A'}</span>
                             </div>
                             <div className={styles.infoRow}>
-                                <span className={styles.label}>Valor Mensal</span>
-                                <span className={styles.value}>{plan ? formatCurrency(plan.monthlyPrice) : 'N/A'}</span>
+                                <span className={styles.label}>Comissão por Venda</span>
+                                <span className={styles.value}>
+                                    <IoTrendingUpOutline size={16} style={{ marginRight: 4, verticalAlign: 'middle' }} />
+                                    {plan?.commissionPercent ?? 0}%
+                                </span>
                             </div>
-                            <div className={styles.infoRow}>
-                                <span className={styles.label}>Limite de Clientes</span>
-                                <span className={styles.value}>{plan?.userLimit || subscription.planUserLimit || '∞'}</span>
-                            </div>
-                            <div className={styles.infoRow}>
-                                <span className={styles.label}>Valor por Excedente</span>
-                                <span className={styles.value}>{plan ? formatCurrency(plan.excessUserFee) : 'N/A'}</span>
-                            </div>
-                        </div>
-                    </Card>
-
-                    {/* Uso Atual */}
-                    <Card className={styles.card}>
-                        <div className={styles.cardHeader}>
-                            <IoPeopleOutline size={20} className={styles.cardIcon} />
-                            <h3>Uso Atual</h3>
-                        </div>
-                        <div className={styles.cardBody}>
-                            <div className={styles.usageSection}>
-                                <div className={styles.usageNumbers}>
-                                    <span className={styles.usageCurrent}>{subscription.currentProfileCount}</span>
-                                    <span className={styles.usageSeparator}>/</span>
-                                    <span className={styles.usageLimit}>{plan?.userLimit || '∞'}</span>
-                                </div>
-                                <span className={styles.usageLabel}>clientes cadastrados</span>
-                                {plan?.userLimit && (
-                                    <div className={styles.progressBar}>
-                                        <div
-                                            className={`${styles.progressFill} ${usagePercentage >= 100 ? styles.exceeded : ''}`}
-                                            style={{ width: `${Math.min(usagePercentage, 100)}%` }}
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </Card>
-
-                    {/* Excedentes */}
-                    <Card className={`${styles.card} ${subscription.excessProfiles > 0 ? styles.cardWarning : ''}`}>
-                        <div className={styles.cardHeader}>
-                            <IoAlertCircleOutline
-                                size={20}
-                                className={subscription.excessProfiles > 0 ? styles.cardIconWarning : styles.cardIcon}
-                            />
-                            <h3>Excedentes</h3>
-                        </div>
-                        <div className={styles.cardBody}>
-                            {subscription.excessProfiles > 0 ? (
-                                <>
-                                    <div className={styles.excessValue}>
-                                        <span className={styles.excessNumber}>+{subscription.excessProfiles}</span>
-                                        <span className={styles.excessLabel}>clientes excedentes</span>
-                                    </div>
-                                    <div className={styles.excessAmount}>
-                                        <IoCashOutline size={18} />
-                                        <span>Valor adicional: <strong>{formatCurrency(subscription.excessAmount)}</strong></span>
-                                    </div>
-                                </>
-                            ) : (
-                                <div className={styles.noExcess}>
-                                    <span className={styles.checkIcon}>✓</span>
-                                    <span>Dentro do limite do plano</span>
-                                </div>
-                            )}
                         </div>
                     </Card>
 
@@ -255,6 +190,12 @@ export default function SubscriptionDetailsPage() {
                                 <span className={styles.label}>Data de Início</span>
                                 <span className={styles.value}>
                                     {subscription.startedAt ? formatISOToDate(subscription.startedAt) : 'N/A'}
+                                </span>
+                            </div>
+                            <div className={styles.infoRow}>
+                                <span className={styles.label}>Data de Expiração</span>
+                                <span className={styles.value}>
+                                    {subscription.expiresAt ? formatISOToDate(subscription.expiresAt) : 'N/A'}
                                 </span>
                             </div>
                             <div className={styles.infoRow}>
@@ -278,7 +219,7 @@ export default function SubscriptionDetailsPage() {
                             {deactivating ? 'Desativando...' : 'Desativar Assinatura'}
                         </button>
                     )}
-                    {subscription.status === 'cancelled' && (
+                    {(subscription.status === 'cancelled' || subscription.status === 'overdue') && (
                         <button
                             className={styles.successButton}
                             onClick={handleActivate}
@@ -292,12 +233,6 @@ export default function SubscriptionDetailsPage() {
                         variant="secondary"
                         onClick={() => setIsModalOpen(true)}
                     />
-                    {subscription.excessProfiles > 0 && (
-                        <Button
-                            title="Sugerir Upgrade"
-                            onClick={() => setIsModalOpen(true)}
-                        />
-                    )}
                 </div>
             </PageLayout>
 

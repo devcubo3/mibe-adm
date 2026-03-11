@@ -2,7 +2,8 @@ import {
     Subscription,
     CreateSubscriptionDTO,
     UpdateSubscriptionDTO,
-    ExcessSummary
+    PaymentHistory,
+    InvoiceSummary
 } from '@/types/subscription.types';
 import { supabase } from '@/lib/supabase';
 
@@ -19,33 +20,40 @@ const mapDbSubscriptionToSubscription = (row: Record<string, unknown>): Subscrip
         companyName: companies?.business_name as string | undefined,
         planId: row.plan_id as string,
         planName: plans?.name as string | undefined,
-        planUserLimit: plans?.user_limit as number | undefined,
         status: row.status as Subscription['status'],
         startedAt: row.started_at as string,
-        currentProfileCount: row.current_profile_count as number,
-        excessProfiles: row.excess_profiles as number,
-        excessAmount: Number(row.excess_amount),
+        expiresAt: (row.expires_at as string) || null,
+        asaasPaymentId: (row.asaas_payment_id as string) || null,
+        asaasCustomerId: (row.asaas_customer_id as string) || null,
         createdAt: row.created_at as string,
         updatedAt: row.updated_at as string,
     };
 };
 
+const mapDbPaymentHistory = (row: Record<string, unknown>): PaymentHistory => ({
+    id: row.id as string,
+    subscriptionId: row.subscription_id as string,
+    amount: Number(row.amount),
+    status: row.status as PaymentHistory['status'],
+    type: row.type as PaymentHistory['type'],
+    commissionDate: (row.commission_date as string) || null,
+    paymentDate: (row.payment_date as string) || null,
+    dueDate: row.due_date as string,
+    gatewayReference: (row.gateway_reference as string) || null,
+    createdAt: row.created_at as string,
+});
+
 export const subscriptionService = {
     /**
      * Busca todas as assinaturas com filtros opcionais
      */
-    getAll: async (filters?: { status?: string; planId?: string }): Promise<Subscription[]> => {
+    getAll: async (filters?: { status?: string }): Promise<Subscription[]> => {
         let query = supabase
             .from('subscriptions')
-            .select(`
-        *,
-        companies(business_name),
-        plans(name, user_limit)
-      `)
+            .select(`*, companies(business_name), plans(name)`)
             .order('created_at', { ascending: false });
 
         if (filters?.status) query = query.eq('status', filters.status);
-        if (filters?.planId) query = query.eq('plan_id', filters.planId);
 
         const { data, error } = await query;
 
@@ -63,8 +71,10 @@ export const subscriptionService = {
     getByCompanyId: async (companyId: string): Promise<Subscription | null> => {
         const { data, error } = await supabase
             .from('subscriptions')
-            .select(`*, companies(business_name), plans(name, user_limit)`)
+            .select(`*, companies(business_name), plans(name)`)
             .eq('company_id', companyId)
+            .order('created_at', { ascending: false })
+            .limit(1)
             .maybeSingle();
 
         if (error) {
@@ -81,7 +91,7 @@ export const subscriptionService = {
     getById: async (id: string): Promise<Subscription | null> => {
         const { data, error } = await supabase
             .from('subscriptions')
-            .select(`*, companies(business_name), plans(name, user_limit)`)
+            .select(`*, companies(business_name), plans(name)`)
             .eq('id', id)
             .maybeSingle();
 
@@ -103,7 +113,7 @@ export const subscriptionService = {
                 company_id: dto.companyId,
                 plan_id: dto.planId,
             })
-            .select(`*, companies(business_name), plans(name, user_limit)`)
+            .select(`*, companies(business_name), plans(name)`)
             .single();
 
         if (error) {
@@ -127,7 +137,7 @@ export const subscriptionService = {
             .from('subscriptions')
             .update(payload)
             .eq('id', id)
-            .select(`*, companies(business_name), plans(name, user_limit)`)
+            .select(`*, companies(business_name), plans(name)`)
             .single();
 
         if (error) {
@@ -139,73 +149,15 @@ export const subscriptionService = {
     },
 
     /**
-     * Busca resumo de excedentes para o dashboard
-     */
-    getExcessSummary: async (): Promise<ExcessSummary> => {
-        const { data, error } = await supabase
-            .from('subscriptions')
-            .select(`
-        excess_profiles,
-        excess_amount,
-        companies(business_name)
-      `)
-            .gt('excess_profiles', 0)
-            .order('excess_profiles', { ascending: false });
-
-        if (error) {
-            console.error('Error fetching excess summary:', error);
-            throw new Error('Erro ao carregar resumo de excedentes');
-        }
-
-        const subscriptions = data || [];
-        const totalExcessAmount = subscriptions.reduce(
-            (acc, s) => acc + Number((s as Record<string, unknown>).excess_amount || 0),
-            0
-        );
-        const topExcess = subscriptions[0] as Record<string, unknown> | undefined;
-        const topCompany = topExcess?.companies as Record<string, unknown> | undefined;
-
-        return {
-            totalEstablishmentsWithExcess: subscriptions.length,
-            totalExcessAmount,
-            topExcessEstablishment: topExcess ? {
-                name: (topCompany?.business_name as string) || 'Desconhecido',
-                excessProfiles: topExcess.excess_profiles as number,
-                excessAmount: Number(topExcess.excess_amount),
-            } : null,
-        };
-    },
-
-    /**
-     * Busca assinaturas com excedentes
-     */
-    getWithExcess: async (): Promise<Subscription[]> => {
-        const { data, error } = await supabase
-            .from('subscriptions')
-            .select(`*, companies(business_name), plans(name, user_limit)`)
-            .gt('excess_profiles', 0)
-            .order('excess_profiles', { ascending: false });
-
-        if (error) {
-            console.error('Error fetching excess subscriptions:', error);
-            throw new Error('Erro ao carregar excedentes');
-        }
-
-        return (data || []).map(mapDbSubscriptionToSubscription);
-    },
-
-    /**
      * Busca empresas sem assinatura
      */
     getCompaniesWithoutSubscription: async (): Promise<{ id: string; name: string }[]> => {
-        // Buscar IDs das empresas que já têm assinatura
         const { data: subscriptions } = await supabase
             .from('subscriptions')
             .select('company_id');
 
         const subscribedIds = (subscriptions || []).map(s => s.company_id);
 
-        // Buscar empresas que não estão na lista
         let query = supabase
             .from('companies')
             .select('id, business_name');
@@ -225,5 +177,111 @@ export const subscriptionService = {
             id: c.id,
             name: c.business_name
         }));
+    },
+
+    // ============================================
+    // FATURAS / PAYMENT HISTORY
+    // ============================================
+
+    /**
+     * Busca histórico de faturas de uma empresa (via subscription)
+     */
+    getPaymentHistoryByCompany: async (companyId: string): Promise<PaymentHistory[]> => {
+        // Primeiro busca subscription IDs da empresa
+        const { data: subs } = await supabase
+            .from('subscriptions')
+            .select('id')
+            .eq('company_id', companyId);
+
+        const subIds = (subs || []).map(s => s.id);
+        if (subIds.length === 0) return [];
+
+        const { data, error } = await supabase
+            .from('payment_history')
+            .select('*')
+            .in('subscription_id', subIds)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching payment history:', error);
+            throw new Error('Erro ao carregar faturas');
+        }
+
+        return (data || []).map(mapDbPaymentHistory);
+    },
+
+    /**
+     * Retorna resumo das faturas de uma empresa
+     */
+    getInvoiceSummary: async (companyId: string): Promise<InvoiceSummary> => {
+        const invoices = await subscriptionService.getPaymentHistoryByCompany(companyId);
+
+        const totalPending = invoices
+            .filter(i => i.status === 'pending')
+            .reduce((acc, i) => acc + i.amount, 0);
+
+        const totalPaid = invoices
+            .filter(i => i.status === 'paid')
+            .reduce((acc, i) => acc + i.amount, 0);
+
+        const overdueCount = invoices
+            .filter(i => {
+                if (i.status !== 'pending') return false;
+                const dueDate = new Date(i.dueDate);
+                const now = new Date();
+                return dueDate < now;
+            }).length;
+
+        return { totalPending, totalPaid, overdueCount };
+    },
+
+    /**
+     * Marca uma fatura como paga manualmente
+     */
+    markInvoiceAsPaid: async (paymentId: string): Promise<PaymentHistory> => {
+        const { data, error } = await supabase
+            .from('payment_history')
+            .update({
+                status: 'paid',
+                payment_date: new Date().toISOString(),
+            })
+            .eq('id', paymentId)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error marking invoice as paid:', error);
+            throw new Error('Erro ao marcar fatura como paga');
+        }
+
+        return mapDbPaymentHistory(data);
+    },
+
+    /**
+     * Desbloqueia uma empresa (reativa company + subscription)
+     */
+    unblockCompany: async (companyId: string): Promise<void> => {
+        // Reativar empresa
+        const { error: companyError } = await supabase
+            .from('companies')
+            .update({ is_active: true, updated_at: new Date().toISOString() })
+            .eq('id', companyId);
+
+        if (companyError) {
+            console.error('Error unblocking company:', companyError);
+            throw new Error('Erro ao desbloquear empresa');
+        }
+
+        // Reativar assinatura
+        const { error: subError } = await supabase
+            .from('subscriptions')
+            .update({ status: 'active', updated_at: new Date().toISOString() })
+            .eq('company_id', companyId)
+            .in('status', ['overdue', 'pending_payment']);
+
+        if (subError) {
+            console.error('Error reactivating subscription:', subError);
+            throw new Error('Erro ao reativar assinatura');
+        }
     },
 };

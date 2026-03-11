@@ -5,7 +5,6 @@ import { Modal, Button } from '@/components/common';
 import { planService, subscriptionService } from '@/services';
 import { Plan } from '@/types/plan.types';
 import { Subscription } from '@/types/subscription.types';
-import { formatCurrency } from '@/utils/formatters';
 import toast from 'react-hot-toast';
 import styles from './SubscriptionModal.module.css';
 
@@ -169,7 +168,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                                 <option value="">Selecione um plano</option>
                                 {plans.map((plan) => (
                                     <option key={plan.id} value={plan.id}>
-                                        {plan.name} - {formatCurrency(plan.monthlyPrice)}/mês
+                                        {plan.name} - {plan.commissionPercent}% comissão
                                     </option>
                                 ))}
                             </select>
@@ -184,19 +183,9 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                                 )}
                                 <div className={styles.previewDetails}>
                                     <div className={styles.previewItem}>
-                                        <span className={styles.previewLabel}>Valor Mensal</span>
+                                        <span className={styles.previewLabel}>Comissão por Venda</span>
                                         <span className={styles.previewValue}>
-                                            {formatCurrency(selectedPlan.monthlyPrice)}
-                                        </span>
-                                    </div>
-                                    <div className={styles.previewItem}>
-                                        <span className={styles.previewLabel}>Limite de Clientes</span>
-                                        <span className={styles.previewValue}>{selectedPlan.userLimit}</span>
-                                    </div>
-                                    <div className={styles.previewItem}>
-                                        <span className={styles.previewLabel}>Valor por Excedente</span>
-                                        <span className={styles.previewValue}>
-                                            {formatCurrency(selectedPlan.excessUserFee)}
+                                            {selectedPlan.commissionPercent}%
                                         </span>
                                     </div>
                                 </div>

@@ -8,9 +8,7 @@ const mapDbPlanToPlan = (row: Record<string, unknown>): Plan => ({
     id: row.id as string,
     name: row.name as string,
     description: (row.description as string) || null,
-    userLimit: row.user_limit as number,
-    excessUserFee: Number(row.excess_user_fee),
-    monthlyPrice: Number(row.monthly_price),
+    commissionPercent: Number(row.commission_percent),
     isActive: row.is_active !== undefined ? (row.is_active as boolean) : true,
     createdAt: row.created_at as string,
     updatedAt: (row.updated_at as string) || null,
@@ -61,9 +59,7 @@ export const planService = {
             .insert({
                 name: dto.name,
                 description: dto.description || null,
-                user_limit: dto.userLimit,
-                excess_user_fee: dto.excessUserFee,
-                monthly_price: dto.monthlyPrice,
+                commission_percent: dto.commissionPercent,
             })
             .select()
             .single();
@@ -84,9 +80,7 @@ export const planService = {
 
         if (dto.name !== undefined) payload.name = dto.name;
         if (dto.description !== undefined) payload.description = dto.description;
-        if (dto.userLimit !== undefined) payload.user_limit = dto.userLimit;
-        if (dto.excessUserFee !== undefined) payload.excess_user_fee = dto.excessUserFee;
-        if (dto.monthlyPrice !== undefined) payload.monthly_price = dto.monthlyPrice;
+        if (dto.commissionPercent !== undefined) payload.commission_percent = dto.commissionPercent;
         if (dto.isActive !== undefined) payload.is_active = dto.isActive;
 
         const { data, error } = await supabase
@@ -119,7 +113,7 @@ export const planService = {
             .from('plans')
             .select('*')
             .eq('is_active', true)
-            .order('monthly_price', { ascending: true });
+            .order('name', { ascending: true });
 
         if (error) {
             console.error('Error fetching active plans:', error);

@@ -16,9 +16,7 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        userLimit: '',
-        excessUserFee: '',
-        monthlyPrice: '',
+        commissionPercent: '',
     });
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -30,17 +28,13 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
             setFormData({
                 name: plan.name,
                 description: plan.description || '',
-                userLimit: String(plan.userLimit),
-                excessUserFee: String(plan.excessUserFee),
-                monthlyPrice: String(plan.monthlyPrice),
+                commissionPercent: String(plan.commissionPercent),
             });
         } else {
             setFormData({
                 name: '',
                 description: '',
-                userLimit: '',
-                excessUserFee: '',
-                monthlyPrice: '',
+                commissionPercent: '',
             });
         }
         setErrors({});
@@ -60,16 +54,9 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
             newErrors.name = 'Nome é obrigatório';
         }
 
-        if (!formData.userLimit || isNaN(Number(formData.userLimit)) || Number(formData.userLimit) < 0) {
-            newErrors.userLimit = 'Limite de clientes inválido';
-        }
-
-        if (!formData.excessUserFee || isNaN(Number(formData.excessUserFee)) || Number(formData.excessUserFee) < 0) {
-            newErrors.excessUserFee = 'Valor por excedente inválido';
-        }
-
-        if (!formData.monthlyPrice || isNaN(Number(formData.monthlyPrice)) || Number(formData.monthlyPrice) < 0) {
-            newErrors.monthlyPrice = 'Preço mensal inválido';
+        const commission = Number(formData.commissionPercent);
+        if (!formData.commissionPercent || isNaN(commission) || commission < 0 || commission > 100) {
+            newErrors.commissionPercent = 'Comissão deve ser entre 0 e 100';
         }
 
         setErrors(newErrors);
@@ -86,9 +73,7 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
             const data: CreatePlanDTO = {
                 name: formData.name.trim(),
                 description: formData.description.trim() || undefined,
-                userLimit: Number(formData.userLimit),
-                excessUserFee: Number(formData.excessUserFee),
-                monthlyPrice: Number(formData.monthlyPrice),
+                commissionPercent: Number(formData.commissionPercent),
             };
 
             await onSave(data);
@@ -110,7 +95,7 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Nome do Plano *</label>
                     <Input
-                        placeholder="Ex: Básico, Premium, Enterprise"
+                        placeholder="Ex: Plano MIBE"
                         value={formData.name}
                         onChange={(value) => handleChange('name', value)}
                         error={errors.name}
@@ -126,38 +111,14 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
                     />
                 </div>
 
-                <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Limite de Clientes *</label>
-                        <Input
-                            type="number"
-                            placeholder="100"
-                            value={formData.userLimit}
-                            onChange={(value) => handleChange('userLimit', value)}
-                            error={errors.userLimit}
-                        />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <label className={styles.label}>Valor por Excedente (R$) *</label>
-                        <Input
-                            type="number"
-                            placeholder="1.00"
-                            value={formData.excessUserFee}
-                            onChange={(value) => handleChange('excessUserFee', value)}
-                            error={errors.excessUserFee}
-                        />
-                    </div>
-                </div>
-
                 <div className={styles.formGroup}>
-                    <label className={styles.label}>Preço Mensal (R$) *</label>
+                    <label className={styles.label}>Comissão por Venda (%) *</label>
                     <Input
                         type="number"
-                        placeholder="99.90"
-                        value={formData.monthlyPrice}
-                        onChange={(value) => handleChange('monthlyPrice', value)}
-                        error={errors.monthlyPrice}
+                        placeholder="5"
+                        value={formData.commissionPercent}
+                        onChange={(value) => handleChange('commissionPercent', value)}
+                        error={errors.commissionPercent}
                     />
                 </div>
 

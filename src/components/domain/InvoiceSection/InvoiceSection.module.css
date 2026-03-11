@@ -1,0 +1,328 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Summary Cards */
+.summaryGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.summaryCard {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.summaryLabel {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+.summaryValue {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.summaryPending .summaryValue {
+    color: #FF9500;
+}
+
+.summaryPaid .summaryValue {
+    color: #34C759;
+}
+
+.summaryOverdue .summaryValue {
+    color: #FF3B30;
+}
+
+.summaryOk .summaryValue {
+    color: #34C759;
+}
+
+/* Unblock Banner */
+.unblockBanner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: rgba(255, 59, 48, 0.08);
+    border: 1px solid rgba(255, 59, 48, 0.2);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #FF3B30;
+}
+
+.unblockBanner span {
+    flex: 1;
+}
+
+/* Table */
+.tableContainer {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table th {
+    text-align: left;
+    padding: 14px 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: var(--color-input-bg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.table td {
+    padding: 14px 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover td {
+    background-color: var(--color-input-bg);
+}
+
+.overdueRow td {
+    background-color: rgba(255, 59, 48, 0.04);
+}
+
+.overdueRow:hover td {
+    background-color: rgba(255, 59, 48, 0.08) !important;
+}
+
+.amount {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.typeBadge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: var(--color-input-bg);
+    color: var(--color-text-secondary);
+}
+
+.gatewayRef {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    font-family: monospace;
+}
+
+.markPaidButton {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #34C759;
+    background: transparent;
+    color: #34C759;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.markPaidButton:hover {
+    background-color: #34C759;
+    color: #fff;
+}
+
+.markPaidButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Empty / Loading States */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 120px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+.emptyState {
+    text-align: center;
+    padding: 40px 24px;
+    background-color: var(--color-input-bg);
+    border-radius: 12px;
+}
+
+.emptyText {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--color-text);
+    margin: 0 0 8px 0;
+}
+
+.emptySubtext {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* Date Filter Bar */
+.filterBar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 14px 20px;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+}
+
+.filterGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filterIcon {
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+}
+
+.filterLabel {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+.dateInput {
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    color: var(--color-text);
+    background-color: var(--color-input-bg);
+    outline: none;
+    transition: border-color 0.2s;
+    min-width: 140px;
+}
+
+.dateInput:focus {
+    border-color: var(--color-primary);
+}
+
+.clearFiltersButton {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.clearFiltersButton:hover {
+    border-color: #FF3B30;
+    color: #FF3B30;
+    background-color: rgba(255, 59, 48, 0.04);
+}
+
+.filterCount {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.noResults {
+    text-align: center;
+    padding: 32px 16px !important;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .summaryGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .table th,
+    .table td {
+        padding: 12px 8px;
+        font-size: 12px;
+    }
+
+    .filterBar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .filterGroup {
+        width: 100%;
+    }
+
+    .dateInput {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .filterCount {
+        margin-left: 0;
+        text-align: center;
+    }
+}

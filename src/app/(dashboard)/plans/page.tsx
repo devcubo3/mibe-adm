@@ -90,7 +90,7 @@ export default function PlansPage() {
         <DashboardLayout>
             <PageLayout
                 title="Planos de Assinatura"
-                actions={<Button title="Novo Plano" onClick={() => handleOpenModal()} />}
+                actions={plans.length === 0 ? <Button title="Novo Plano" onClick={() => handleOpenModal()} /> : undefined}
             >
                 <div className={styles.filters}>
                     <SearchInput

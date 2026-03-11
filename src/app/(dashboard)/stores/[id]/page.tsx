@@ -15,10 +15,11 @@ import {
     IoPeopleOutline,
     IoStorefrontOutline,
     IoImageOutline,
+    IoReceiptOutline,
 } from 'react-icons/io5';
 import { DashboardLayout, PageLayout } from '@/components/layout';
 import { Button } from '@/components/common';
-import { ReviewCard, StoreEditModal, CompanyUserCard, CompanyUserModal } from '@/components/domain';
+import { ReviewCard, StoreEditModal, CompanyUserCard, CompanyUserModal, InvoiceSection } from '@/components/domain';
 import { storeService, transactionService, userService, companyUserService } from '@/services';
 import { Store, Transaction, Review, User, UpdateStoreDTO, CompanyUser, CreateCompanyUserDTO, UpdateCompanyUserDTO } from '@/types';
 import { formatCurrency, formatDate } from '@/utils';
@@ -358,6 +359,21 @@ export default function StoreDetailPage() {
                                 ))}
                             </div>
                         )}
+                    </div>
+
+                    {/* Invoice Section */}
+                    <div className={styles.section}>
+                        <div className={styles.sectionHeader}>
+                            <h2 className={styles.sectionTitle}>
+                                <IoReceiptOutline size={22} />
+                                Faturas de Comissão
+                            </h2>
+                        </div>
+                        <InvoiceSection
+                            companyId={storeId}
+                            isCompanyBlocked={store.status === 'inactive'}
+                            onCompanyUnblocked={loadStoreData}
+                        />
                     </div>
 
                     {/* Transactions Section */}

@@ -2,7 +2,7 @@
  * Tipos para o módulo de Assinaturas
  */
 
-export type SubscriptionStatus = 'active' | 'overdue' | 'cancelled';
+export type SubscriptionStatus = 'active' | 'overdue' | 'cancelled' | 'pending_payment';
 
 export interface Subscription {
     id: string;
@@ -10,12 +10,11 @@ export interface Subscription {
     companyName?: string;
     planId: string;
     planName?: string;
-    planUserLimit?: number;
     status: SubscriptionStatus;
     startedAt: string;
-    currentProfileCount: number;
-    excessProfiles: number;
-    excessAmount: number;
+    expiresAt: string | null;
+    asaasPaymentId: string | null;
+    asaasCustomerId: string | null;
     createdAt: string;
     updatedAt: string;
 }
@@ -30,30 +29,27 @@ export interface UpdateSubscriptionDTO {
     status?: SubscriptionStatus;
 }
 
-export interface ExcessSummary {
-    totalEstablishmentsWithExcess: number;
-    totalExcessAmount: number;
-    topExcessEstablishment: {
-        name: string;
-        excessProfiles: number;
-        excessAmount: number;
-    } | null;
-}
-
 /**
- * Tipos para histórico de pagamentos
+ * Tipos para histórico de pagamentos / faturas
  */
 export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
+export type PaymentType = 'MENSALIDADE' | 'COMISSAO_DIARIA';
 
 export interface PaymentHistory {
     id: string;
     subscriptionId: string;
     amount: number;
-    baseAmount: number;
-    excessAmount: number;
     status: PaymentStatus;
+    type: PaymentType;
+    commissionDate: string | null;
     paymentDate: string | null;
     dueDate: string;
     gatewayReference: string | null;
     createdAt: string;
+}
+
+export interface InvoiceSummary {
+    totalPending: number;
+    totalPaid: number;
+    overdueCount: number;
 }

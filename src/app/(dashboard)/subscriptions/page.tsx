@@ -5,11 +5,10 @@ import { useRouter } from 'next/navigation';
 import { DashboardLayout, PageLayout } from '@/components/layout';
 import { Button, SearchInput, Badge } from '@/components/common';
 import { SubscriptionModal } from '@/components/domain';
-import { subscriptionService, planService } from '@/services';
+import { subscriptionService } from '@/services';
 import { Subscription, SubscriptionStatus } from '@/types/subscription.types';
-import { Plan } from '@/types/plan.types';
 import { useDebounce } from '@/hooks';
-import { formatCurrency, formatISOToDate } from '@/utils/formatters';
+import { formatISOToDate } from '@/utils/formatters';
 import toast from 'react-hot-toast';
 import styles from './subscriptions.module.css';
 
@@ -17,21 +16,21 @@ const STATUS_LABELS: Record<SubscriptionStatus, string> = {
     active: 'Ativo',
     overdue: 'Inadimplente',
     cancelled: 'Cancelado',
+    pending_payment: 'Aguardando Pagamento',
 };
 
-const STATUS_VARIANTS: Record<SubscriptionStatus, 'success' | 'warning' | 'error'> = {
+const STATUS_VARIANTS: Record<SubscriptionStatus, 'success' | 'warning' | 'error' | 'default'> = {
     active: 'success',
     overdue: 'warning',
     cancelled: 'error',
+    pending_payment: 'default',
 };
 
 export default function SubscriptionsPage() {
     const router = useRouter();
     const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
-    const [plans, setPlans] = useState<Plan[]>([]);
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('');
-    const [planFilter, setPlanFilter] = useState<string>('');
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const debouncedSearch = useDebounce(search, 300);
@@ -39,18 +38,14 @@ export default function SubscriptionsPage() {
     const loadData = useCallback(async () => {
         try {
             setLoading(true);
-            const [subsData, plansData] = await Promise.all([
-                subscriptionService.getAll({ status: statusFilter || undefined, planId: planFilter || undefined }),
-                planService.getAll(),
-            ]);
+            const subsData = await subscriptionService.getAll({ status: statusFilter || undefined });
             setSubscriptions(subsData);
-            setPlans(plansData);
         } catch {
             toast.error('Erro ao carregar dados');
         } finally {
             setLoading(false);
         }
-    }, [statusFilter, planFilter]);
+    }, [statusFilter]);
 
     useEffect(() => {
         loadData();
@@ -85,18 +80,7 @@ export default function SubscriptionsPage() {
                         <option value="active">Ativos</option>
                         <option value="overdue">Inadimplentes</option>
                         <option value="cancelled">Cancelados</option>
-                    </select>
-                    <select
-                        className={styles.select}
-                        value={planFilter}
-                        onChange={(e) => setPlanFilter(e.target.value)}
-                    >
-                        <option value="">Todos os planos</option>
-                        {plans.map((plan) => (
-                            <option key={plan.id} value={plan.id}>
-                                {plan.name}
-                            </option>
-                        ))}
+                        <option value="pending_payment">Aguardando Pagamento</option>
                     </select>
                 </div>
 
@@ -113,8 +97,7 @@ export default function SubscriptionsPage() {
                                     <th>Plano</th>
                                     <th>Status</th>
                                     <th>Início</th>
-                                    <th>Clientes</th>
-                                    <th>Excedentes</th>
+                                    <th>Expira em</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -133,12 +116,7 @@ export default function SubscriptionsPage() {
                                             />
                                         </td>
                                         <td>{sub.startedAt ? formatISOToDate(sub.startedAt) : '-'}</td>
-                                        <td>
-                                            {sub.currentProfileCount} / {sub.planUserLimit || '∞'}
-                                        </td>
-                                        <td className={sub.excessProfiles > 0 ? styles.excessHighlight : ''}>
-                                            {sub.excessProfiles > 0 ? `+${sub.excessProfiles}` : '0'}
-                                        </td>
+                                        <td>{sub.expiresAt ? formatISOToDate(sub.expiresAt) : '-'}</td>
                                     </tr>
                                 ))}
                             </tbody>
