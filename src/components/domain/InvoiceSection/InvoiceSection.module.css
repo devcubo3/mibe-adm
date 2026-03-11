@@ -140,12 +140,6 @@
     color: var(--color-text-secondary);
 }
 
-.gatewayRef {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    font-family: monospace;
-}
-
 .markPaidButton {
     padding: 6px 12px;
     border-radius: 6px;
@@ -294,6 +288,113 @@
     color: var(--color-text-secondary);
 }
 
+/* Pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+}
+
+.paginationInfo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.perPageLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+.perPageSelect {
+    padding: 6px 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    color: var(--color-text);
+    background-color: var(--color-input-bg);
+    outline: none;
+    cursor: pointer;
+}
+
+.perPageSelect:focus {
+    border-color: var(--color-primary);
+}
+
+.paginationCount {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+.paginationControls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pageButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--color-text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pageButton:hover:not(:disabled) {
+    background-color: var(--color-input-bg);
+    border-color: var(--color-primary);
+}
+
+.pageButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pageButtonActive {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+}
+
+.pageButtonActive:hover:not(:disabled) {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+}
+
+.pageEllipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .summaryGrid {
@@ -324,5 +425,19 @@
     .filterCount {
         margin-left: 0;
         text-align: center;
+    }
+
+    .pagination {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .paginationInfo {
+        justify-content: space-between;
+    }
+
+    .paginationControls {
+        justify-content: center;
     }
 }

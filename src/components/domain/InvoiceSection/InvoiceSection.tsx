@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { IoCheckmarkCircleOutline, IoAlertCircleOutline, IoCalendarOutline, IoCloseCircle, IoCloseCircleOutline } from 'react-icons/io5';
+import { IoCheckmarkCircleOutline, IoAlertCircleOutline, IoCalendarOutline, IoCloseCircle, IoCloseCircleOutline, IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 import { Badge, Button } from '@/components/common';
 import { subscriptionService } from '@/services';
 import { PaymentHistory, InvoiceSummary } from '@/types/subscription.types';
@@ -46,6 +46,10 @@ const InvoiceSection: React.FC<InvoiceSectionProps> = ({
     const [unblocking, setUnblocking] = useState(false);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+
+    const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
 
     const filteredInvoices = useMemo(() => {
         if (!startDate && !endDate) return invoices;
@@ -71,9 +75,26 @@ const InvoiceSection: React.FC<InvoiceSectionProps> = ({
         });
     }, [invoices, startDate, endDate]);
 
+    const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
+
+    const paginatedInvoices = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        return filteredInvoices.slice(startIndex, startIndex + itemsPerPage);
+    }, [filteredInvoices, currentPage, itemsPerPage]);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+    };
+
+    const handleItemsPerPageChange = (value: number) => {
+        setItemsPerPage(value);
+        setCurrentPage(1);
+    };
+
     const handleClearFilters = () => {
         setStartDate('');
         setEndDate('');
+        setCurrentPage(1);
     };
 
     const hasActiveFilters = startDate || endDate;
@@ -197,7 +218,7 @@ const InvoiceSection: React.FC<InvoiceSectionProps> = ({
                         type="date"
                         className={styles.dateInput}
                         value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
+                        onChange={(e) => { setStartDate(e.target.value); setCurrentPage(1); }}
                         max={endDate || undefined}
                     />
                 </div>
@@ -207,7 +228,7 @@ const InvoiceSection: React.FC<InvoiceSectionProps> = ({
                         type="date"
                         className={styles.dateInput}
                         value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
+                        onChange={(e) => { setEndDate(e.target.value); setCurrentPage(1); }}
                         min={startDate || undefined}
                     />
                 </div>
@@ -238,19 +259,18 @@ const InvoiceSection: React.FC<InvoiceSectionProps> = ({
                             <th>Valor</th>
                             <th>Vencimento</th>
                             <th>Status</th>
-                            <th>Ref. Gateway</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredInvoices.length === 0 ? (
+                        {paginatedInvoices.length === 0 ? (
                             <tr>
-                                <td colSpan={7} className={styles.noResults}>
+                                <td colSpan={6} className={styles.noResults}>
                                     Nenhuma fatura encontrada para o período selecionado.
                                 </td>
                             </tr>
                         ) : (
-                            filteredInvoices.map((invoice) => (
+                            paginatedInvoices.map((invoice) => (
                                 <tr key={invoice.id} className={isOverdue(invoice) ? styles.overdueRow : ''}>
                                     <td>
                                         <span className={styles.typeBadge}>
@@ -265,11 +285,6 @@ const InvoiceSection: React.FC<InvoiceSectionProps> = ({
                                             variant={isOverdue(invoice) ? 'error' : STATUS_VARIANTS[invoice.status]}
                                             text={isOverdue(invoice) ? 'Vencida' : STATUS_LABELS[invoice.status]}
                                         />
-                                    </td>
-                                    <td className={styles.gatewayRef}>
-                                        {invoice.gatewayReference
-                                            ? invoice.gatewayReference.substring(0, 20) + '...'
-                                            : '-'}
                                     </td>
                                     <td>
                                         {(invoice.status === 'pending' || invoice.status === 'failed') && (
@@ -288,6 +303,66 @@ const InvoiceSection: React.FC<InvoiceSectionProps> = ({
                     </tbody>
                 </table>
             </div>
+
+            {/* Pagination */}
+            {filteredInvoices.length > 0 && (
+                <div className={styles.pagination}>
+                    <div className={styles.paginationInfo}>
+                        <label className={styles.perPageLabel}>
+                            Exibir
+                            <select
+                                className={styles.perPageSelect}
+                                value={itemsPerPage}
+                                onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                            >
+                                {PAGE_SIZE_OPTIONS.map((opt) => (
+                                    <option key={opt} value={opt}>{opt}</option>
+                                ))}
+                            </select>
+                            por página
+                        </label>
+                        <span className={styles.paginationCount}>
+                            {(currentPage - 1) * itemsPerPage + 1}–{Math.min(currentPage * itemsPerPage, filteredInvoices.length)} de {filteredInvoices.length}
+                        </span>
+                    </div>
+                    <div className={styles.paginationControls}>
+                        <button
+                            className={styles.pageButton}
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                            <IoChevronBackOutline size={16} />
+                        </button>
+                        {Array.from({ length: totalPages }, (_, i) => i + 1)
+                            .filter((page) => {
+                                if (totalPages <= 5) return true;
+                                if (page === 1 || page === totalPages) return true;
+                                return Math.abs(page - currentPage) <= 1;
+                            })
+                            .map((page, idx, arr) => (
+                                <React.Fragment key={page}>
+                                    {idx > 0 && arr[idx - 1] !== page - 1 && (
+                                        <span className={styles.pageEllipsis}>...</span>
+                                    )}
+                                    <button
+                                        className={`${styles.pageButton} ${currentPage === page ? styles.pageButtonActive : ''}`}
+                                        onClick={() => handlePageChange(page)}
+                                    >
+                                        {page}
+                                    </button>
+                                </React.Fragment>
+                            ))
+                        }
+                        <button
+                            className={styles.pageButton}
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                        >
+                            <IoChevronForwardOutline size={16} />
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
