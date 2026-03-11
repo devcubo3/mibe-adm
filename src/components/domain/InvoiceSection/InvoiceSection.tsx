@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { IoCheckmarkCircleOutline, IoAlertCircleOutline, IoCalendarOutline, IoCloseCircle } from 'react-icons/io5';
+import { IoCheckmarkCircleOutline, IoAlertCircleOutline, IoCalendarOutline, IoCloseCircle, IoCloseCircleOutline } from 'react-icons/io5';
 import { Badge, Button } from '@/components/common';
 import { subscriptionService } from '@/services';
 import { PaymentHistory, InvoiceSummary } from '@/types/subscription.types';
@@ -167,7 +167,7 @@ const InvoiceSection: React.FC<InvoiceSectionProps> = ({
                     <span className={styles.summaryLabel}>Faturas Vencidas</span>
                     <span className={styles.summaryValue}>
                         {summary.overdueCount > 0 ? (
-                            <><IoAlertCircleOutline size={18} /> {summary.overdueCount}</>
+                            <><IoCloseCircleOutline size={18} /> {summary.overdueCount}</>
                         ) : (
                             <><IoCheckmarkCircleOutline size={18} /> 0</>
                         )}
