@@ -290,4 +290,31 @@ export const subscriptionService = {
             throw new Error('Erro ao reativar assinatura');
         }
     },
+
+    /**
+     * Deleta uma assinatura e seu histórico de pagamentos
+     */
+    delete: async (id: string): Promise<void> => {
+        // Primeiro remove payment_history associado
+        const { error: paymentError } = await supabase
+            .from('payment_history')
+            .delete()
+            .eq('subscription_id', id);
+
+        if (paymentError) {
+            console.error('Error deleting payment history:', paymentError);
+            throw new Error('Erro ao deletar histórico de pagamentos');
+        }
+
+        // Depois remove a assinatura
+        const { error } = await supabase
+            .from('subscriptions')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting subscription:', error);
+            throw new Error('Erro ao deletar assinatura');
+        }
+    },
 };

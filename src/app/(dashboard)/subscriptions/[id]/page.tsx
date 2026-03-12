@@ -13,7 +13,8 @@ import {
     IoArrowBackOutline,
     IoDocumentTextOutline,
     IoCalendarOutline,
-    IoTrendingUpOutline
+    IoTrendingUpOutline,
+    IoTrashOutline
 } from 'react-icons/io5';
 import toast from 'react-hot-toast';
 import styles from './details.module.css';
@@ -41,6 +42,7 @@ export default function SubscriptionDetailsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [deactivating, setDeactivating] = useState(false);
     const [activating, setActivating] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     const subscriptionId = params.id as string;
 
@@ -109,6 +111,27 @@ export default function SubscriptionDetailsPage() {
             toast.error('Erro ao ativar assinatura');
         } finally {
             setActivating(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!subscription) return;
+
+        const confirmed = window.confirm(
+            `Tem certeza que deseja deletar permanentemente a assinatura de "${subscription.companyName}"?\n\nEssa ação não pode ser desfeita.`
+        );
+
+        if (!confirmed) return;
+
+        try {
+            setDeleting(true);
+            await subscriptionService.delete(subscription.id);
+            toast.success('Assinatura deletada com sucesso');
+            router.push('/subscriptions');
+        } catch {
+            toast.error('Erro ao deletar assinatura');
+        } finally {
+            setDeleting(false);
         }
     };
 
@@ -233,6 +256,15 @@ export default function SubscriptionDetailsPage() {
                         variant="secondary"
                         onClick={() => setIsModalOpen(true)}
                     />
+                    <button
+                        className={styles.dangerButton}
+                        onClick={handleDelete}
+                        disabled={subscription.status === 'active' || deleting}
+                        title={subscription.status === 'active' ? 'Desative a assinatura antes de deletar' : 'Deletar assinatura'}
+                    >
+                        <IoTrashOutline size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+                        {deleting ? 'Deletando...' : 'Deletar Assinatura'}
+                    </button>
                 </div>
             </PageLayout>
 
