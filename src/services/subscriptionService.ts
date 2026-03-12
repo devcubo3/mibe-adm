@@ -107,11 +107,17 @@ export const subscriptionService = {
      * Cria uma nova assinatura
      */
     create: async (dto: CreateSubscriptionDTO): Promise<Subscription> => {
+        const now = new Date();
+        const expiresAt = new Date(now);
+        expiresAt.setDate(expiresAt.getDate() + 30);
+
         const { data, error } = await supabase
             .from('subscriptions')
             .insert({
                 company_id: dto.companyId,
                 plan_id: dto.planId,
+                started_at: now.toISOString(),
+                expires_at: expiresAt.toISOString(),
             })
             .select(`*, companies(business_name), plans(name)`)
             .single();
