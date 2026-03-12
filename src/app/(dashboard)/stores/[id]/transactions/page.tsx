@@ -22,7 +22,7 @@ import styles from './store-transactions.module.css';
 const ITEMS_PER_PAGE = 20;
 
 type SortOption = 'newest' | 'oldest' | 'highest' | 'lowest';
-type FilterType = 'all' | 'credit' | 'debit';
+type FilterType = 'all' | 'pix' | 'dinheiro';
 
 export default function StoreTransactionsPage() {
     const router = useRouter();
@@ -92,9 +92,9 @@ export default function StoreTransactionsPage() {
             });
         }
 
-        // Type filter
+        // Payment method filter
         if (filterType !== 'all') {
-            result = result.filter((t) => t.type === filterType);
+            result = result.filter((t) => t.paymentMethod === filterType);
         }
 
         // Date filter
@@ -246,16 +246,16 @@ export default function StoreTransactionsPage() {
                                     Todas
                                 </button>
                                 <button
-                                    className={`${styles.filterBtn} ${filterType === 'credit' ? styles.active : ''}`}
-                                    onClick={() => setFilterType('credit')}
+                                    className={`${styles.filterBtn} ${filterType === 'pix' ? styles.active : ''}`}
+                                    onClick={() => setFilterType('pix')}
                                 >
-                                    Crédito
+                                    PIX
                                 </button>
                                 <button
-                                    className={`${styles.filterBtn} ${filterType === 'debit' ? styles.active : ''}`}
-                                    onClick={() => setFilterType('debit')}
+                                    className={`${styles.filterBtn} ${filterType === 'dinheiro' ? styles.active : ''}`}
+                                    onClick={() => setFilterType('dinheiro')}
                                 >
-                                    Débito
+                                    Dinheiro
                                 </button>
                             </div>
                         </div>
@@ -328,7 +328,7 @@ export default function StoreTransactionsPage() {
                                 <div className={styles.listHeader}>
                                     <span>Data</span>
                                     <span>Cliente</span>
-                                    <span>Tipo</span>
+                                    <span>Método de Pagamento</span>
                                     <span>Descrição</span>
                                     <span className={styles.alignRight}>Valor</span>
                                 </div>
@@ -343,9 +343,9 @@ export default function StoreTransactionsPage() {
                                                 {customer?.name || 'Cliente não encontrado'}
                                             </span>
                                             <Badge
-                                                variant={transaction.type === 'credit' ? 'success' : 'error'}
+                                                variant={transaction.paymentMethod === 'pix' ? 'primary' : 'default'}
                                             >
-                                                {transaction.type === 'credit' ? 'Crédito' : 'Débito'}
+                                                {transaction.paymentMethod === 'pix' ? 'PIX' : 'Dinheiro'}
                                             </Badge>
                                             <span className={styles.description}>
                                                 {transaction.description}

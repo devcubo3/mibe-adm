@@ -72,6 +72,7 @@ export interface DbTransaction {
     net_amount_paid: number;
     cashback_earned: number;
     admin_fee_amount: number | null;
+    payment_method: string;
     created_at: string;
 }
 

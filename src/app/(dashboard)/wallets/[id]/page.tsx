@@ -255,7 +255,7 @@ export default function WalletDetailPage() {
                                 <thead>
                                     <tr>
                                         <th>Data</th>
-                                        <th>Tipo</th>
+                                        <th>Método de Pagamento</th>
                                         <th>Descrição</th>
                                         <th>Valor</th>
                                     </tr>
@@ -266,12 +266,12 @@ export default function WalletDetailPage() {
                                             <td>{formatDate(transaction.createdAt)}</td>
                                             <td>
                                                 <span
-                                                    className={`${styles.typeBadge} ${transaction.type === 'credit'
+                                                    className={`${styles.typeBadge} ${transaction.paymentMethod === 'pix'
                                                             ? styles.typeBadgeCredit
                                                             : styles.typeBadgeDebit
                                                         }`}
                                                 >
-                                                    {transaction.type === 'credit' ? 'Crédito' : 'Débito'}
+                                                    {transaction.paymentMethod === 'pix' ? 'PIX' : 'Dinheiro'}
                                                 </span>
                                             </td>
                                             <td>{transaction.description}</td>

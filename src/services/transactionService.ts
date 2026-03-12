@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase';
  */
 function mapDbTransactionToTransaction(tx: DbTransactionWithRelations): Transaction {
   // Determine transaction type based on cashback flow
-  const type: 'credit' | 'debit' = tx.cashback_earned > 0 ? 'credit' : 'debit';
+  const type: 'credit' | 'debit' = tx.cashback_redeemed > 0 ? 'debit' : 'credit';
 
   return {
     id: tx.id,
@@ -15,6 +15,7 @@ function mapDbTransactionToTransaction(tx: DbTransactionWithRelations): Transact
     storeId: tx.company_id || '',
     walletId: '', // Not directly mapped - would need cashback_balances
     type,
+    paymentMethod: (tx.payment_method || 'dinheiro') as 'pix' | 'dinheiro',
     amount: type === 'credit' ? Number(tx.cashback_earned) : Number(tx.cashback_redeemed),
     description: type === 'credit'
       ? `Compra de R$ ${Number(tx.total_amount).toFixed(2)} - Cashback acumulado`

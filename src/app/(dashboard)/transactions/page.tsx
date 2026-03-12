@@ -14,7 +14,7 @@ import styles from './transactions.module.css';
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [search, setSearch] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'credit' | 'debit'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'pix' | 'dinheiro'>('all');
   const [loading, setLoading] = useState(true);
   const debouncedSearch = useDebounce(search, 300);
 
@@ -36,7 +36,7 @@ export default function TransactionsPage() {
 
   const filteredTransactions = transactions.filter((t) => {
     const matchesSearch = t.description.toLowerCase().includes(debouncedSearch.toLowerCase());
-    const matchesType = filterType === 'all' || t.type === filterType;
+    const matchesType = filterType === 'all' || t.paymentMethod === filterType;
     return matchesSearch && matchesType;
   });
 
@@ -103,16 +103,16 @@ export default function TransactionsPage() {
               Todas
             </button>
             <button
-              className={`${styles.filterBtn} ${filterType === 'credit' ? styles.active : ''}`}
-              onClick={() => setFilterType('credit')}
+              className={`${styles.filterBtn} ${filterType === 'pix' ? styles.active : ''}`}
+              onClick={() => setFilterType('pix')}
             >
-              Recebido
+              PIX
             </button>
             <button
-              className={`${styles.filterBtn} ${filterType === 'debit' ? styles.active : ''}`}
-              onClick={() => setFilterType('debit')}
+              className={`${styles.filterBtn} ${filterType === 'dinheiro' ? styles.active : ''}`}
+              onClick={() => setFilterType('dinheiro')}
             >
-              Resgatado
+              Dinheiro
             </button>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function TransactionsPage() {
             <div className={styles.listHeader}>
               <span>Descrição</span>
               <span>Data</span>
-              <span>Tipo</span>
+              <span>Método de Pagamento</span>
               <span className={styles.alignRight}>Valor</span>
             </div>
             {filteredTransactions.map((transaction) => (
@@ -150,9 +150,9 @@ export default function TransactionsPage() {
                 </div>
                 <span className={styles.date}>{formatDate(transaction.createdAt)}</span>
                 <Badge
-                  variant={transaction.type === 'credit' ? 'success' : 'error'}
+                  variant={transaction.paymentMethod === 'pix' ? 'primary' : 'default'}
                 >
-                  {transaction.type === 'credit' ? 'Recebido' : 'Resgatado'}
+                  {transaction.paymentMethod === 'pix' ? 'PIX' : 'Dinheiro'}
                 </Badge>
                 <span className={`${styles.amount} ${transaction.type === 'credit' ? styles.credit : styles.debit}`}>
                   {transaction.type === 'credit' ? '+' : '-'}{formatCurrency(transaction.amount)}

@@ -4,6 +4,7 @@ export interface Transaction {
   storeId: string;
   walletId: string;
   type: 'credit' | 'debit';
+  paymentMethod: 'pix' | 'dinheiro';
   amount: number;
   description: string;
   createdAt: string;
