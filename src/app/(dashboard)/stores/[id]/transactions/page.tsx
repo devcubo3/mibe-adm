@@ -22,7 +22,7 @@ import styles from './store-transactions.module.css';
 const ITEMS_PER_PAGE = 20;
 
 type SortOption = 'newest' | 'oldest' | 'highest' | 'lowest';
-type FilterType = 'all' | 'pix' | 'dinheiro';
+type FilterType = 'all' | 'credit' | 'debit' | 'pix' | 'dinheiro';
 
 export default function StoreTransactionsPage() {
     const router = useRouter();
@@ -92,8 +92,10 @@ export default function StoreTransactionsPage() {
             });
         }
 
-        // Payment method filter
-        if (filterType !== 'all') {
+        // Type or payment method filter
+        if (filterType === 'credit' || filterType === 'debit') {
+            result = result.filter((t) => t.type === filterType);
+        } else if (filterType === 'pix' || filterType === 'dinheiro') {
             result = result.filter((t) => t.paymentMethod === filterType);
         }
 
@@ -244,6 +246,18 @@ export default function StoreTransactionsPage() {
                                     onClick={() => setFilterType('all')}
                                 >
                                     Todas
+                                </button>
+                                <button
+                                    className={`${styles.filterBtn} ${filterType === 'credit' ? styles.active : ''}`}
+                                    onClick={() => setFilterType('credit')}
+                                >
+                                    Crédito
+                                </button>
+                                <button
+                                    className={`${styles.filterBtn} ${filterType === 'debit' ? styles.active : ''}`}
+                                    onClick={() => setFilterType('debit')}
+                                >
+                                    Débito
                                 </button>
                                 <button
                                     className={`${styles.filterBtn} ${filterType === 'pix' ? styles.active : ''}`}

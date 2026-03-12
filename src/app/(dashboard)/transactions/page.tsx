@@ -14,7 +14,7 @@ import styles from './transactions.module.css';
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [search, setSearch] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'pix' | 'dinheiro'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'credit' | 'debit' | 'pix' | 'dinheiro'>('all');
   const [loading, setLoading] = useState(true);
   const debouncedSearch = useDebounce(search, 300);
 
@@ -36,7 +36,8 @@ export default function TransactionsPage() {
 
   const filteredTransactions = transactions.filter((t) => {
     const matchesSearch = t.description.toLowerCase().includes(debouncedSearch.toLowerCase());
-    const matchesType = filterType === 'all' || t.paymentMethod === filterType;
+    const matchesType = filterType === 'all'
+      || (filterType === 'credit' || filterType === 'debit' ? t.type === filterType : t.paymentMethod === filterType);
     return matchesSearch && matchesType;
   });
 
@@ -101,6 +102,18 @@ export default function TransactionsPage() {
               onClick={() => setFilterType('all')}
             >
               Todas
+            </button>
+            <button
+              className={`${styles.filterBtn} ${filterType === 'credit' ? styles.active : ''}`}
+              onClick={() => setFilterType('credit')}
+            >
+              Crédito
+            </button>
+            <button
+              className={`${styles.filterBtn} ${filterType === 'debit' ? styles.active : ''}`}
+              onClick={() => setFilterType('debit')}
+            >
+              Débito
             </button>
             <button
               className={`${styles.filterBtn} ${filterType === 'pix' ? styles.active : ''}`}
