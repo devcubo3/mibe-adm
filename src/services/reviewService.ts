@@ -10,7 +10,7 @@ function mapDbReviewToReview(review: DbReviewWithRelations): Review {
     id: review.id,
     userId: review.user_id || '',
     userName: review.user?.full_name || 'Usuário',
-    userAvatar: '', // Not in current DB schema
+    userAvatar: review.user?.avatar_url || '',
     storeId: review.company_id || '',
     rating: review.rating || 0,
     comment: review.comment || '',

@@ -62,10 +62,14 @@ export function mapDbReviewToReview(review: DbReviewWithRelations): Review {
         storeId: review.company_id || '',
         userId: review.user_id || '',
         userName: review.user?.full_name || 'Usuário',
-        userAvatar: '', // Not in current DB schema
+        userAvatar: review.user?.avatar_url || '',
         rating: review.rating || 0,
         comment: review.comment || '',
         storeReply: review.owner_response || undefined,
+        reply: review.owner_response ? {
+            text: review.owner_response,
+            createdAt: review.created_at,
+        } : undefined,
         createdAt: review.created_at,
     };
 }

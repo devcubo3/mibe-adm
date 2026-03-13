@@ -15,7 +15,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
     <div className={styles.reviewCard}>
       <div className={styles.reviewHeader}>
         <div className={styles.reviewAvatar}>
-          <span className={styles.reviewAvatarText}>{getInitials(review.userName)}</span>
+          {review.userAvatar ? (
+            <img src={review.userAvatar} alt={review.userName} className={styles.reviewAvatarImage} />
+          ) : (
+            <span className={styles.reviewAvatarText}>{getInitials(review.userName)}</span>
+          )}
         </div>
         <div className={styles.reviewUserInfo}>
           <p className={styles.reviewUserName}>{review.userName}</p>
