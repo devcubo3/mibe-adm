@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { DashboardLayout } from '@/components/layout';
 import { PageLayout } from '@/components/layout';
 import { SearchInput, Card } from '@/components/common';
@@ -76,7 +77,8 @@ export default function UsersPage() {
         ) : (
           <div className={styles.userList}>
             {filteredUsers.map((user) => (
-              <Card key={user.id} className={styles.userCard}>
+              <Link key={user.id} href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Card className={styles.userCard}>
                 {user.avatar ? (
                   <img src={user.avatar} alt={user.name} className={styles.userAvatar} />
                 ) : (
@@ -109,6 +111,7 @@ export default function UsersPage() {
                   )}
                 </div>
               </Card>
+              </Link>
             ))}
           </div>
         )}

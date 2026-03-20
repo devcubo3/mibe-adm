@@ -1,0 +1,334 @@
+.detailPage {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #666;
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.backButton:hover {
+  color: #181818;
+}
+
+/* Profile Header */
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+}
+
+.avatarLarge {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarPlaceholderLarge {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #181818;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.profileInfo {
+  flex: 1;
+}
+
+.profileName {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #181818;
+  margin: 0 0 4px;
+}
+
+.profileEmail {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 8px;
+}
+
+.roleBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  background: #f0f0f0;
+  color: #181818;
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.statCard {
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+}
+
+.statCardPoints {
+  composes: statCard;
+  background: #181818;
+  border-color: #181818;
+}
+
+.statLabel {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 8px;
+}
+
+.statLabelLight {
+  composes: statLabel;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.statValue {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: #181818;
+  margin: 0;
+}
+
+.statValueLight {
+  composes: statValue;
+  color: #fff;
+}
+
+.statSublabel {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #999;
+  margin: 4px 0 0;
+}
+
+.statSublabelLight {
+  composes: statSublabel;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Info Grid */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.infoCard {
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+}
+
+.infoCardTitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #181818;
+  margin: 0 0 16px;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #666;
+}
+
+.infoValue {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #181818;
+}
+
+/* Wallets Section */
+.section {
+  margin-top: 8px;
+}
+
+.sectionTitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: #181818;
+  margin: 0 0 16px;
+}
+
+.walletsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.walletItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+}
+
+.walletLogo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.walletLogoPlaceholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.walletInfo {
+  flex: 1;
+}
+
+.walletStore {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #181818;
+  margin: 0;
+}
+
+.walletBalance {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #34C759;
+  margin: 0;
+}
+
+/* Transactions Table */
+.transactionsTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e5e5e5;
+}
+
+.transactionsTable thead {
+  background: #f9f9f9;
+}
+
+.transactionsTable th {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.transactionsTable td {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333;
+  padding: 12px 16px;
+  border-top: 1px solid #f5f5f5;
+}
+
+.amountCredit {
+  color: #34C759;
+  font-weight: 600;
+}
+
+.amountDebit {
+  color: #FF3B30;
+  font-weight: 600;
+}
+
+/* States */
+.loading {
+  text-align: center;
+  padding: 48px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #999;
+}
+
+.errorState {
+  text-align: center;
+  padding: 48px;
+}
+
+.errorText {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 32px;
+  color: #999;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+}

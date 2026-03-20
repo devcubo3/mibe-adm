@@ -89,6 +89,24 @@ export const userService = {
   },
 
   /**
+   * Get total loyalty points for a user
+   */
+  getUserPoints: async (userId: string): Promise<number> => {
+    const { data, error } = await supabase
+      .from('user_points')
+      .select('total_points')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching user points:', error);
+      return 0;
+    }
+
+    return data?.total_points || 0;
+  },
+
+  /**
    * Get users by role (useful for filtering clients vs owners)
    */
   getByRole: async (role: 'client' | 'company_owner' | 'super_admin'): Promise<User[]> => {

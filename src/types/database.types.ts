@@ -92,6 +92,21 @@ export interface DbAppConfig {
     updated_at: string;
 }
 
+export interface DbUserPoints {
+    user_id: string;
+    total_points: number;
+    updated_at: string;
+}
+
+export interface DbPointsHistory {
+    id: string;
+    user_id: string;
+    transaction_id: string | null;
+    points: number;
+    type: string;
+    created_at: string;
+}
+
 export interface DbCashbackBalance {
     id: string;
     user_id: string | null;
