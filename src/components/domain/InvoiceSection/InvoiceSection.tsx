@@ -169,7 +169,9 @@ const InvoiceSection: React.FC<InvoiceSectionProps> = ({
 
     const isOverdue = (invoice: PaymentHistory) => {
         if (invoice.status !== 'pending') return false;
-        return new Date(invoice.dueDate) < new Date();
+        const [y, m, d] = invoice.dueDate.split("-").map(Number);
+        const dueEnd = new Date(y, m - 1, d, 23, 59, 59);
+        return dueEnd < new Date();
     };
 
     return (
@@ -277,7 +279,7 @@ const InvoiceSection: React.FC<InvoiceSectionProps> = ({
                                             {TYPE_LABELS[invoice.type] || invoice.type}
                                         </span>
                                     </td>
-                                    <td>{invoice.commissionDate || (invoice.createdAt ? formatISOToDate(invoice.createdAt) : '-')}</td>
+                                    <td>{invoice.commissionDate ? formatISOToDate(invoice.commissionDate) : (invoice.createdAt ? formatISOToDate(invoice.createdAt) : '-')}</td>
                                     <td className={styles.amount}>{formatCurrency(invoice.amount)}</td>
                                     <td>{invoice.dueDate ? formatISOToDate(invoice.dueDate) : '-'}</td>
                                     <td>

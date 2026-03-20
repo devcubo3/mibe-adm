@@ -11,3 +11,4 @@ export { default as PlanCard } from './PlanCard';
 export { default as PlanModal } from './PlanModal';
 export { default as SubscriptionModal } from './SubscriptionModal';
 export { default as InvoiceSection } from './InvoiceSection';
+export { default as InvoiceCard } from './InvoiceCard';

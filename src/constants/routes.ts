@@ -13,9 +13,13 @@ export const ROUTES = {
   STORES_DETAIL: (id: string) => `/stores/${id}`,
   STORES_EDIT: (id: string) => `/stores/${id}/edit`,
 
-  // Wallets
+  // Wallets (hidden from sidebar, kept for backwards compatibility)
   WALLETS: '/wallets',
   WALLETS_DETAIL: (id: string) => `/wallets/${id}`,
+
+  // Invoices
+  INVOICES: '/invoices',
+  INVOICES_DETAIL: (companyId: string) => `/invoices/${companyId}`,
 
   // Users
   USERS: '/users',

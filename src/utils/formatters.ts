@@ -66,21 +66,27 @@ export const formatDateToISO = (dateString: string): string => {
 };
 
 export const formatISOToDate = (isoString: string): string => {
+  // Strings YYYY-MM-DD (DATE do Postgres) sao interpretadas como UTC midnight pelo JS.
+  // Criamos como data local para evitar deslocamento de fuso (UTC-3 mostraria dia anterior).
+  if (/^\d{4}-\d{2}-\d{2}$/.test(isoString)) {
+    const [year, month, day] = isoString.split('-').map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString('pt-BR');
+  }
+  // TIMESTAMPTZ: converter explicitamente para Brasilia
   const date = new Date(isoString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
+  return date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
 };
 
 export const formatDateTimeShort = (isoString: string): string => {
+  // DATE sem hora: retorna so a data
+  if (/^\d{4}-\d{2}-\d{2}$/.test(isoString)) {
+    const [year, month, day] = isoString.split('-').map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString('pt-BR');
+  }
   const date = new Date(isoString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${day}/${month}/${year}\n${hours}:${minutes}`;
+  const datePart = date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+  const timePart = date.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' });
+  return `${datePart}\n${timePart}`;
 };
 
 export const formatRelativeTime = (dateString: string): string => {

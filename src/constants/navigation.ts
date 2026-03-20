@@ -10,9 +10,9 @@ export const SIDEBAR_ITEMS = [
     path: '/stores',
   },
   {
-    label: 'Carteiras',
-    icon: 'IoWalletOutline',
-    path: '/wallets',
+    label: 'Faturas',
+    icon: 'IoReceiptOutline',
+    path: '/invoices',
   },
   {
     label: 'Usuários',

@@ -53,3 +53,14 @@ export interface InvoiceSummary {
     totalPaid: number;
     overdueCount: number;
 }
+
+export interface CompanyInvoiceCard {
+    companyId: string;
+    companyName: string;
+    companyLogo: string | null;
+    pendingCount: number;
+    paidCount: number;
+    overdueCount: number;
+    totalPending: number;
+    totalPaid: number;
+}

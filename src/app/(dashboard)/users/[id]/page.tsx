@@ -21,7 +21,6 @@ const PointsIcon = ({ size = 24, color = '#FFC107' }: { size?: number; color?: s
       d="M12 2L14.8 8.6L22 9.2L16.6 13.8L18.2 20.8L12 17.2L5.8 20.8L7.4 13.8L2 9.2L9.2 8.6L12 2Z"
       stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
     />
-    <circle cx="12" cy="11" r="2.5" fill={color} />
   </svg>
 );
 
