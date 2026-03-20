@@ -7,7 +7,6 @@ import {
   IoArrowBack,
   IoPersonOutline,
   IoStorefrontOutline,
-  IoStarOutline,
 } from 'react-icons/io5';
 import { DashboardLayout, PageLayout } from '@/components/layout';
 import { userService, walletService, transactionService } from '@/services';
@@ -15,6 +14,16 @@ import { User, Wallet, Transaction } from '@/types';
 import { formatCurrency, formatISOToDate, formatCPF } from '@/utils';
 import toast from 'react-hot-toast';
 import styles from './userDetail.module.css';
+
+const PointsIcon = ({ size = 24, color = '#FFC107' }: { size?: number; color?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12 2L14.8 8.6L22 9.2L16.6 13.8L18.2 20.8L12 17.2L5.8 20.8L7.4 13.8L2 9.2L9.2 8.6L12 2Z"
+      stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+    />
+    <circle cx="12" cy="11" r="2.5" fill={color} />
+  </svg>
+);
 
 const getRoleLabel = (role: string) => {
   switch (role) {
@@ -132,6 +141,7 @@ export default function UserDetailPage() {
           {/* Stats */}
           <div className={styles.statsGrid}>
             <div className={styles.statCardPoints}>
+              <PointsIcon size={28} />
               <p className={styles.statLabelLight}>PONTOS MIBE</p>
               <h2 className={styles.statValueLight}>{points.toLocaleString('pt-BR')}</h2>
               <p className={styles.statSublabelLight}>1 ponto por R$1 pago</p>
