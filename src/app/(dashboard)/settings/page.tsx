@@ -135,7 +135,7 @@ const SettingsPage = () => {
                                     label="WhatsApp"
                                     placeholder="Ex: 5511999999999"
                                     value={supportWhatsapp}
-                                    onChange={(e) => setSupportWhatsapp(e.target.value)}
+                                    onChange={setSupportWhatsapp}
                                     disabled={loadingConfig}
                                 />
                             </div>
@@ -147,7 +147,7 @@ const SettingsPage = () => {
                                     label="E-mail"
                                     placeholder="Ex: suporte@mibeapp.com.br"
                                     value={supportEmail}
-                                    onChange={(e) => setSupportEmail(e.target.value)}
+                                    onChange={setSupportEmail}
                                     disabled={loadingConfig}
                                 />
                             </div>
