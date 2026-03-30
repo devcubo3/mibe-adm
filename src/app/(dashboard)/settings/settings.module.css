@@ -156,6 +156,36 @@
     flex-shrink: 0;
 }
 
+/* Support Contact Card */
+.supportContactCard {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px !important;
+}
+
+.supportContactField {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.supportContactIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 56px;
+    border-radius: 10px;
+    background-color: #F5F5F5;
+    color: #181818;
+    flex-shrink: 0;
+}
+
+.saveButton {
+    align-self: flex-end;
+}
+
 /* Logout Button */
 .logoutButton {
     display: flex;

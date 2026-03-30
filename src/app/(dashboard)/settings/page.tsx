@@ -1,16 +1,19 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DashboardLayout, PageLayout } from '@/components/layout';
-import { Card } from '@/components/common';
+import { Card, Input, Button } from '@/components/common';
 import {
     IoLockClosedOutline,
     IoHelpCircleOutline,
     IoChevronForward,
-    IoLogOutOutline
+    IoLogOutOutline,
+    IoChatbubbleEllipsesOutline,
+    IoMailOutline,
 } from 'react-icons/io5';
 import { useAuth } from '@/hooks';
 import toast from 'react-hot-toast';
+import { appConfigService } from '@/services/appConfigService';
 import styles from './settings.module.css';
 
 interface SettingItem {
@@ -24,6 +27,36 @@ interface SettingItem {
 const SettingsPage = () => {
     const { user, logout } = useAuth();
 
+    const [supportWhatsapp, setSupportWhatsapp] = useState('');
+    const [supportEmail, setSupportEmail] = useState('');
+    const [savingSupport, setSavingSupport] = useState(false);
+    const [loadingConfig, setLoadingConfig] = useState(true);
+
+    useEffect(() => {
+        appConfigService.getConfig()
+            .then((config) => {
+                setSupportWhatsapp(config.support_whatsapp || '');
+                setSupportEmail(config.support_email || '');
+            })
+            .catch(() => toast.error('Erro ao carregar configurações'))
+            .finally(() => setLoadingConfig(false));
+    }, []);
+
+    const handleSaveSupport = async () => {
+        setSavingSupport(true);
+        try {
+            await appConfigService.updateSupportContact({
+                support_whatsapp: supportWhatsapp,
+                support_email: supportEmail,
+            });
+            toast.success('Contato de suporte atualizado!');
+        } catch {
+            toast.error('Erro ao salvar contato de suporte');
+        } finally {
+            setSavingSupport(false);
+        }
+    };
+
     const handleComingSoon = (feature: string) => {
         toast(`${feature} - Em breve!`, { icon: '🚧' });
     };
@@ -36,7 +69,6 @@ const SettingsPage = () => {
             onClick: () => handleComingSoon('Segurança'),
         },
     ];
-
 
     const supportSettings: SettingItem[] = [
         {
@@ -91,6 +123,43 @@ const SettingsPage = () => {
                         {renderSettingsList(accountSettings)}
                     </div>
 
+                    {/* Support Contact Config */}
+                    <div className={styles.section}>
+                        <h3 className={styles.sectionTitle}>Contato de Suporte</h3>
+                        <Card className={styles.supportContactCard}>
+                            <div className={styles.supportContactField}>
+                                <div className={styles.supportContactIcon}>
+                                    <IoChatbubbleEllipsesOutline size={20} />
+                                </div>
+                                <Input
+                                    label="WhatsApp"
+                                    placeholder="Ex: 5511999999999"
+                                    value={supportWhatsapp}
+                                    onChange={(e) => setSupportWhatsapp(e.target.value)}
+                                    disabled={loadingConfig}
+                                />
+                            </div>
+                            <div className={styles.supportContactField}>
+                                <div className={styles.supportContactIcon}>
+                                    <IoMailOutline size={20} />
+                                </div>
+                                <Input
+                                    label="E-mail"
+                                    placeholder="Ex: suporte@mibeapp.com.br"
+                                    value={supportEmail}
+                                    onChange={(e) => setSupportEmail(e.target.value)}
+                                    disabled={loadingConfig}
+                                />
+                            </div>
+                            <Button
+                                onClick={handleSaveSupport}
+                                disabled={loadingConfig || savingSupport}
+                                className={styles.saveButton}
+                            >
+                                {savingSupport ? 'Salvando...' : 'Salvar'}
+                            </Button>
+                        </Card>
+                    </div>
 
                     {/* Support */}
                     <div className={styles.section}>

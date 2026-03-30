@@ -89,6 +89,8 @@ export interface DbReview {
 export interface DbAppConfig {
     id: number;
     global_fee_percent: number;
+    support_whatsapp: string | null;
+    support_email: string | null;
     updated_at: string;
 }
 

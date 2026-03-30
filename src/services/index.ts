@@ -9,3 +9,4 @@ export * from './companyUserService';
 export * from './planService';
 export * from './subscriptionService';
 export * from './asaasService';
+export * from './appConfigService';
