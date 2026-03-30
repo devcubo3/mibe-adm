@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabase/admin';
+import { supabase } from '@/lib/supabase';
 import { DbAppConfig } from '@/types/database.types';
 
 export interface UpdateSupportContactDTO {
@@ -8,7 +8,7 @@ export interface UpdateSupportContactDTO {
 
 export const appConfigService = {
     async getConfig(): Promise<DbAppConfig> {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await supabase
             .from('app_configs')
             .select('*')
             .single();
@@ -22,7 +22,7 @@ export const appConfigService = {
     },
 
     async updateSupportContact(dto: UpdateSupportContactDTO): Promise<DbAppConfig> {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await supabase
             .from('app_configs')
             .update({
                 support_whatsapp: dto.support_whatsapp,
