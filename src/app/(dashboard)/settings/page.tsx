@@ -152,12 +152,12 @@ const SettingsPage = () => {
                                 />
                             </div>
                             <Button
+                                title="Salvar"
                                 onClick={handleSaveSupport}
-                                disabled={loadingConfig || savingSupport}
+                                loading={savingSupport}
+                                disabled={loadingConfig}
                                 className={styles.saveButton}
-                            >
-                                {savingSupport ? 'Salvando...' : 'Salvar'}
-                            </Button>
+                            />
                         </Card>
                     </div>
 
