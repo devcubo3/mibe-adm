@@ -39,6 +39,10 @@ const PlanCard: React.FC<PlanCardProps> = ({
                     <span className={styles.price}>{plan.commissionPercent}%</span>
                     <span className={styles.period}>de comissão por venda</span>
                 </div>
+                <div className={styles.priceSection}>
+                    <span className={styles.price}>R$ {plan.monthlyPrice.toFixed(2)}</span>
+                    <span className={styles.period}>por mês</span>
+                </div>
 
                 <div className={styles.features}>
                     <div className={styles.featureItem}>

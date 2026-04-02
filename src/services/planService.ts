@@ -9,6 +9,7 @@ const mapDbPlanToPlan = (row: Record<string, unknown>): Plan => ({
     name: row.name as string,
     description: (row.description as string) || null,
     commissionPercent: Number(row.commission_percent),
+    monthlyPrice: Number(row.monthly_price),
     isActive: row.is_active !== undefined ? (row.is_active as boolean) : true,
     createdAt: row.created_at as string,
     updatedAt: (row.updated_at as string) || null,
@@ -60,6 +61,7 @@ export const planService = {
                 name: dto.name,
                 description: dto.description || null,
                 commission_percent: dto.commissionPercent,
+                monthly_price: dto.monthlyPrice,
             })
             .select()
             .single();
@@ -81,6 +83,7 @@ export const planService = {
         if (dto.name !== undefined) payload.name = dto.name;
         if (dto.description !== undefined) payload.description = dto.description;
         if (dto.commissionPercent !== undefined) payload.commission_percent = dto.commissionPercent;
+        if (dto.monthlyPrice !== undefined) payload.monthly_price = dto.monthlyPrice;
         if (dto.isActive !== undefined) payload.is_active = dto.isActive;
 
         const { data, error } = await supabase

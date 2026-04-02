@@ -11,6 +11,7 @@ export interface Plan {
     name: string;
     description: string | null;
     commissionPercent: number;
+    monthlyPrice: number;
     isActive: boolean;
     createdAt: string;
     updatedAt: string | null;
@@ -20,6 +21,7 @@ export interface CreatePlanDTO {
     name: string;
     description?: string;
     commissionPercent: number;
+    monthlyPrice: number;
 }
 
 export interface UpdatePlanDTO extends Partial<CreatePlanDTO> {
