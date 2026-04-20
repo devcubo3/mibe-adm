@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/layout';
 import { PageLayout, Section } from '@/components/layout';
 import { Card } from '@/components/common';
-import { IoWallet, IoStorefront, IoPeople, IoSwapHorizontal, IoTrendingUp, IoTrendingDown, IoTime } from 'react-icons/io5';
+import { IoWallet, IoStorefront, IoPeople, IoSwapHorizontal, IoTrendingUp, IoTrendingDown, IoTime, IoCard, IoCash } from 'react-icons/io5';
 import { dashboardService, DashboardStats } from '@/services/dashboardService';
 import styles from './page.module.css';
 
@@ -74,6 +74,18 @@ export default function DashboardPage() {
       value: stats?.totalTransactions,
       label: 'Transações',
       colorClass: styles.cardOrange,
+    },
+    {
+      icon: IoCard,
+      value: stats?.totalActiveSubscriptions,
+      label: 'Assinaturas Ativas',
+      colorClass: styles.cardTeal,
+    },
+    {
+      icon: IoCash,
+      value: stats ? formatCurrency(stats.totalPendingFees) : null,
+      label: 'Cobranças Pendentes',
+      colorClass: styles.cardRed,
     },
   ];
 

@@ -7,6 +7,8 @@ export interface DashboardStats {
   totalTransactions: number;
   totalCashbackGenerated: number;
   totalCashbackRedeemed: number;
+  totalActiveSubscriptions: number;
+  totalPendingFees: number;
   recentActivity: Array<{
     id: string;
     type: 'credit' | 'debit';
@@ -20,7 +22,7 @@ export interface DashboardStats {
 export const dashboardService = {
   getStats: async (): Promise<DashboardStats> => {
     // Fetch counts in parallel
-    const [storesResult, usersResult, transactionsResult, recentResult] = await Promise.all([
+    const [storesResult, usersResult, transactionsResult, recentResult, subscriptionsResult, feesResult] = await Promise.all([
       // Count companies
       supabase.from('companies').select('id', { count: 'exact', head: true }),
       // Count users (clients only)
@@ -40,6 +42,10 @@ export const dashboardService = {
         `)
         .order('created_at', { ascending: false })
         .limit(5),
+      // Count active subscriptions
+      supabase.from('subscriptions').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+      // Sum pending commission fees
+      supabase.from('payment_history').select('amount').eq('type', 'COMISSAO_DIARIA').eq('status', 'pending'),
     ]);
 
     // Calculate totals from transactions
@@ -69,12 +75,21 @@ export const dashboardService = {
       };
     });
 
+    let totalPendingFees = 0;
+    if (feesResult.data) {
+      for (const row of feesResult.data) {
+        totalPendingFees += Number(row.amount) || 0;
+      }
+    }
+
     return {
       totalStores: storesResult.count || 0,
       totalUsers: usersResult.count || 0,
       totalTransactions: transactionsResult.data?.length || 0,
       totalCashbackGenerated,
       totalCashbackRedeemed,
+      totalActiveSubscriptions: subscriptionsResult.count || 0,
+      totalPendingFees,
       recentActivity,
     };
   },

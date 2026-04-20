@@ -1,6 +1,6 @@
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
@@ -113,6 +113,24 @@
 .cardOrange .iconWrapper {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
   color: var(--color-orange);
+}
+
+.cardTeal {
+  border-left-color: #14B8A6;
+}
+
+.cardTeal .iconWrapper {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.15), rgba(20, 184, 166, 0.05));
+  color: #14B8A6;
+}
+
+.cardRed {
+  border-left-color: var(--color-error);
+}
+
+.cardRed .iconWrapper {
+  background: linear-gradient(135deg, rgba(255, 59, 48, 0.15), rgba(255, 59, 48, 0.05));
+  color: var(--color-error);
 }
 
 .statContent {
