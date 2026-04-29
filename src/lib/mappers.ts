@@ -16,7 +16,7 @@ export function mapDbCompanyToStore(company: DbCompanyWithRelations): Store {
     return {
         id: company.id,
         name: company.business_name,
-        cnpj: company.cnpj,
+        cnpj: company.cnpj || '',
         category: company.category?.name || 'Sem categoria',
         description: company.description || '',
         coverImage: company.cover_url || '',
@@ -48,8 +48,8 @@ export function mapDbCompanyToStore(company: DbCompanyWithRelations): Store {
         },
         photos: [],
         status: (company.status as 'active' | 'inactive' | 'pending') || 'pending',
-        createdAt: company.created_at,
-        updatedAt: company.created_at,
+        createdAt: company.created_at || '',
+        updatedAt: company.updated_at || company.created_at || '',
     };
 }
 
