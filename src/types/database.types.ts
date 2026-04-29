@@ -8,7 +8,7 @@
 // ============================================
 
 export type CompanyStatus = 'pending' | 'active' | 'inactive';
-export type UserRole = 'client' | 'company_owner' | 'super_admin';
+export type UserRole = 'client' | 'company_owner' | 'company_staff' | 'super_admin';
 export type PaymentHistoryStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 
 // ============================================
@@ -23,6 +23,9 @@ export interface DbProfile {
     birth_date: string | null;
     avatar_url: string | null;
     role: UserRole;
+    company_id: string | null;
+    is_active: boolean;
+    onboarding_completed: boolean | null;
     created_at: string;
 }
 
