@@ -12,7 +12,7 @@ export const storeService = {
       .select(`
         *,
         category:categories(*),
-        owner:profiles(*)
+        owner:profiles!companies_owner_id_fkey(*)
       `)
       .order('created_at', { ascending: false });
 
@@ -30,7 +30,7 @@ export const storeService = {
       .select(`
         *,
         category:categories(*),
-        owner:profiles(*)
+        owner:profiles!companies_owner_id_fkey(*)
       `)
       .eq('id', id)
       .single();
@@ -80,7 +80,7 @@ export const storeService = {
       .select(`
         *,
         category:categories(*),
-        owner:profiles(*)
+        owner:profiles!companies_owner_id_fkey(*)
       `)
       .single();
 
@@ -158,7 +158,7 @@ export const storeService = {
       .select(`
         *,
         category:categories(*),
-        owner:profiles(*)
+        owner:profiles!companies_owner_id_fkey(*)
       `)
       .single();
 

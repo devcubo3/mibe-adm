@@ -50,20 +50,26 @@ export interface DbCompany {
     owner_id: string | null;
     category_id: number | null;
     plan_id: string | null;
-    cnpj: string;
+    cnpj: string | null;
     business_name: string;
     description: string | null;
     logo_url: string | null;
     cover_url: string | null;
-    status: CompanyStatus;
-    cashback_percent: number;
-    min_purchase_value: number;
-    has_expiration: boolean;
-    expiration_days: number;
+    status: CompanyStatus | null;
+    is_active: boolean;
+    cashback_percent: number | null;
+    min_purchase_value: number | null;
+    has_expiration: boolean | null;
+    expiration_days: number | null;
     address: string | null;
     phone: string | null;
     email: string | null;
-    created_at: string;
+    latitude: number | null;
+    longitude: number | null;
+    asaas_customer_id: string | null;
+    trial_used_at: string | null;
+    created_at: string | null;
+    updated_at: string | null;
 }
 
 export interface DbTransaction {
