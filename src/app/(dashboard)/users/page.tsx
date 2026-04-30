@@ -57,7 +57,7 @@ export default function UsersPage() {
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
     user.email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-    user.cpf.includes(debouncedSearch)
+    (user.cpf ?? '').includes(debouncedSearch)
   );
 
   return (

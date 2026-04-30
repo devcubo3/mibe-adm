@@ -27,7 +27,7 @@ function mapDbProfileToUser(profile: DbProfileWithEmail): User {
 
 export const userService = {
   getAll: async (): Promise<User[]> => {
-    const res = await fetch('/api/users');
+    const res = await fetch('/api/users', { cache: 'no-store' });
 
     if (!res.ok) {
       console.error('Error fetching users:', res.statusText);
@@ -39,18 +39,15 @@ export const userService = {
   },
 
   getById: async (id: string): Promise<User> => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', id)
-      .single();
+    const res = await fetch(`/api/users/${id}`, { cache: 'no-store' });
 
-    if (error) {
-      console.error('Error fetching user:', error);
+    if (!res.ok) {
+      console.error('Error fetching user:', res.statusText);
       throw new Error('Usuário não encontrado');
     }
 
-    return mapDbProfileToUser(data as DbProfile);
+    const data: DbProfileWithEmail = await res.json();
+    return mapDbProfileToUser(data);
   },
 
   update: async (id: string, userData: Partial<User>): Promise<User> => {

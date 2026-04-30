@@ -5,7 +5,8 @@ export const formatCurrency = (value: number): string => {
   })}`;
 };
 
-export const formatCNPJ = (text: string): string => {
+export const formatCNPJ = (text: string | null | undefined): string => {
+  if (!text) return 'Não informado';
   const cleaned = text.replace(/\D/g, '');
   const match = cleaned.match(/^(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2})$/);
   if (match) {
@@ -20,7 +21,8 @@ export const formatCNPJ = (text: string): string => {
   return text;
 };
 
-export const formatCPF = (text: string): string => {
+export const formatCPF = (text: string | null | undefined): string => {
+  if (!text) return 'Não informado';
   const cleaned = text.replace(/\D/g, '');
   const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,3})(\d{0,2})$/);
   if (match) {
@@ -34,7 +36,8 @@ export const formatCPF = (text: string): string => {
   return text;
 };
 
-export const formatDate = (text: string): string => {
+export const formatDate = (text: string | null | undefined): string => {
+  if (!text) return 'Não informado';
   const cleaned = text.replace(/\D/g, '');
   const match = cleaned.match(/^(\d{0,2})(\d{0,2})(\d{0,4})$/);
   if (match) {
@@ -47,7 +50,8 @@ export const formatDate = (text: string): string => {
   return text;
 };
 
-export const formatPhone = (text: string): string => {
+export const formatPhone = (text: string | null | undefined): string => {
+  if (!text) return 'Não informado';
   const cleaned = text.replace(/\D/g, '');
   const match = cleaned.match(/^(\d{0,2})(\d{0,5})(\d{0,4})$/);
   if (match) {
