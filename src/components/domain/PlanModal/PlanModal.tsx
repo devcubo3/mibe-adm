@@ -16,7 +16,6 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        commissionPercent: '',
         monthlyPrice: '',
     });
     const [loading, setLoading] = useState(false);
@@ -29,14 +28,12 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
             setFormData({
                 name: plan.name,
                 description: plan.description || '',
-                commissionPercent: String(plan.commissionPercent),
                 monthlyPrice: String(plan.monthlyPrice),
             });
         } else {
             setFormData({
                 name: '',
                 description: '',
-                commissionPercent: '',
                 monthlyPrice: '',
             });
         }
@@ -55,11 +52,6 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
 
         if (!formData.name.trim()) {
             newErrors.name = 'Nome é obrigatório';
-        }
-
-        const commission = Number(formData.commissionPercent);
-        if (!formData.commissionPercent || isNaN(commission) || commission < 0 || commission > 100) {
-            newErrors.commissionPercent = 'Comissão deve ser entre 0 e 100';
         }
 
         const price = Number(formData.monthlyPrice);
@@ -81,7 +73,6 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
             const data: CreatePlanDTO = {
                 name: formData.name.trim(),
                 description: formData.description.trim() || undefined,
-                commissionPercent: Number(formData.commissionPercent),
                 monthlyPrice: Number(formData.monthlyPrice),
             };
 
@@ -117,17 +108,6 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose, onSave, plan }) 
                         placeholder="Descrição opcional do plano"
                         value={formData.description}
                         onChange={(value) => handleChange('description', value)}
-                    />
-                </div>
-
-                <div className={styles.formGroup}>
-                    <label className={styles.label}>Comissão por Venda (%) *</label>
-                    <Input
-                        type="number"
-                        placeholder="5"
-                        value={formData.commissionPercent}
-                        onChange={(value) => handleChange('commissionPercent', value)}
-                        error={errors.commissionPercent}
                     />
                 </div>
 

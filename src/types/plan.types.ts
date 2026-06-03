@@ -2,15 +2,18 @@
  * Tipos para o módulo de Planos de Assinatura
  *
  * Mapeamento banco -> frontend:
- * - commission_percent -> commissionPercent
  * - is_active -> isActive
+ *
+ * Obs.: `commissionPercent` é legado (coluna mantida no banco para histórico).
+ * O MIBE não cobra mais taxa por venda — apenas a mensalidade.
  */
 
 export interface Plan {
     id: string;
     name: string;
     description: string | null;
-    commissionPercent: number;
+    /** @deprecated Não há mais taxa por venda. Mantido para retrocompatibilidade. */
+    commissionPercent?: number;
     monthlyPrice: number;
     isActive: boolean;
     createdAt: string;
@@ -20,7 +23,8 @@ export interface Plan {
 export interface CreatePlanDTO {
     name: string;
     description?: string;
-    commissionPercent: number;
+    /** @deprecated Não há mais taxa por venda. */
+    commissionPercent?: number;
     monthlyPrice: number;
 }
 

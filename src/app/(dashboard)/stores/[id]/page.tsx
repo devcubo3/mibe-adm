@@ -366,7 +366,7 @@ export default function StoreDetailPage() {
                         <div className={styles.sectionHeader}>
                             <h2 className={styles.sectionTitle}>
                                 <IoReceiptOutline size={22} />
-                                Faturas de Comissão
+                                Faturas
                             </h2>
                         </div>
                         <InvoiceSection

@@ -8,7 +8,7 @@ const mapDbPlanToPlan = (row: Record<string, unknown>): Plan => ({
     id: row.id as string,
     name: row.name as string,
     description: (row.description as string) || null,
-    commissionPercent: Number(row.commission_percent),
+    commissionPercent: Number(row.commission_percent) || 0,
     monthlyPrice: Number(row.monthly_price),
     isActive: row.is_active !== undefined ? (row.is_active as boolean) : true,
     createdAt: row.created_at as string,
@@ -60,7 +60,7 @@ export const planService = {
             .insert({
                 name: dto.name,
                 description: dto.description || null,
-                commission_percent: dto.commissionPercent,
+                commission_percent: dto.commissionPercent ?? 0,
                 monthly_price: dto.monthlyPrice,
             })
             .select()

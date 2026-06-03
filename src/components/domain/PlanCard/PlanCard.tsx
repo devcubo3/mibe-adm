@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { IoCreateOutline, IoTrendingUpOutline, IoToggleOutline, IoToggle } from 'react-icons/io5';
+import { IoCreateOutline, IoCheckmarkCircleOutline, IoToggleOutline, IoToggle } from 'react-icons/io5';
 import { Badge } from '@/components/common';
 import { Plan } from '@/types/plan.types';
 import styles from './PlanCard.module.css';
@@ -36,18 +36,14 @@ const PlanCard: React.FC<PlanCardProps> = ({
 
             <div className={styles.cardBody}>
                 <div className={styles.priceSection}>
-                    <span className={styles.price}>{plan.commissionPercent}%</span>
-                    <span className={styles.period}>de comissão por venda</span>
-                </div>
-                <div className={styles.priceSection}>
                     <span className={styles.price}>R$ {plan.monthlyPrice.toFixed(2)}</span>
                     <span className={styles.period}>por mês</span>
                 </div>
 
                 <div className={styles.features}>
                     <div className={styles.featureItem}>
-                        <IoTrendingUpOutline className={styles.featureIcon} size={18} />
-                        <span>Comissão cobrada sobre cada transação</span>
+                        <IoCheckmarkCircleOutline className={styles.featureIcon} size={18} />
+                        <span>Mensalidade fixa, sem taxa por venda</span>
                     </div>
                 </div>
 

@@ -168,7 +168,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                                 <option value="">Selecione um plano</option>
                                 {plans.map((plan) => (
                                     <option key={plan.id} value={plan.id}>
-                                        {plan.name} - {plan.commissionPercent}% comissão
+                                        {plan.name} - R$ {plan.monthlyPrice.toFixed(2)}/mês
                                     </option>
                                 ))}
                             </select>
@@ -183,9 +183,9 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                                 )}
                                 <div className={styles.previewDetails}>
                                     <div className={styles.previewItem}>
-                                        <span className={styles.previewLabel}>Comissão por Venda</span>
+                                        <span className={styles.previewLabel}>Mensalidade</span>
                                         <span className={styles.previewValue}>
-                                            {selectedPlan.commissionPercent}%
+                                            R$ {selectedPlan.monthlyPrice.toFixed(2)}/mês
                                         </span>
                                     </div>
                                 </div>

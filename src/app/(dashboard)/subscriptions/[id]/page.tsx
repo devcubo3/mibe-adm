@@ -193,10 +193,10 @@ export default function SubscriptionDetailsPage() {
                                 <span className={styles.value}>{plan?.name || subscription.planName || 'N/A'}</span>
                             </div>
                             <div className={styles.infoRow}>
-                                <span className={styles.label}>Comissão por Venda</span>
+                                <span className={styles.label}>Mensalidade</span>
                                 <span className={styles.value}>
                                     <IoTrendingUpOutline size={16} style={{ marginRight: 4, verticalAlign: 'middle' }} />
-                                    {plan?.commissionPercent ?? 0}%
+                                    R$ {(plan?.monthlyPrice ?? 0).toFixed(2)}/mês
                                 </span>
                             </div>
                         </div>
